@@ -3,14 +3,22 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/MWGRed</item>
+        <item name="colorPrimaryDark">@color/MWGRed</item>
+        <item name="colorAccent">@color/MWGRed</item>
+
+        <!-- Use Source Sans as the main font-->
+        <item name="android:fontFamily">@font/sourcesans</item>
+        <item name="fontFamily">@font/sourcesans</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
+        <!-- Use Source Sans as the main font-->
+        <item name="android:fontFamily">@font/sourcesans</item>
+        <item name="fontFamily">@font/sourcesans</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

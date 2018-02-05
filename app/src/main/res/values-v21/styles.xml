@@ -4,5 +4,22 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+
+        <!-- Use Source Sans as the main font-->
+        <item name="android:fontFamily">@font/sourcesans</item>
+        <item name="fontFamily">@font/sourcesans</item>
+        <item name="android:navigationBarColor">@color/MWGRed</item>
+    </style>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/MWGRed</item>
+        <item name="colorPrimaryDark">@color/MWGRed</item>
+        <item name="colorAccent">@color/MWGRed</item>
+
+        <!-- Use Source Sans as the main font-->
+        <item name="android:fontFamily">@font/sourcesans</item>
+        <item name="fontFamily">@font/sourcesans</item>
+        <item name="android:navigationBarColor">@color/MWGRed</item>
     </style>
 </resources>
