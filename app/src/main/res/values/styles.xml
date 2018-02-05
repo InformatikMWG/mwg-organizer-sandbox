@@ -25,4 +25,11 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="ThemeOverlay.AppCompat.DrawerTheme">
+        <!-- Color of text and icon when SELECTED -->
+        <item name="colorPrimary">@color/MWGWhite</item>
+
+        <!-- Background color when SELECTED -->
+        <item name="colorControlHighlight">@color/MWGRed</item>
+    </style>
 </resources>

@@ -3,27 +3,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/drawer_top"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_black"
+            android:title="@string/home.header" />
         <item
             android:id="@+id/nav_vplan"
+            android:icon="@drawable/ic_replace_black"
             android:title="@string/vertretung.header" />
         <item
             android:id="@+id/nav_mensa"
+            android:icon="@drawable/ic_restaurant_black"
             android:title="@string/mensa.header" />
         <item
             android:id="@+id/nav_news"
+            android:icon="@drawable/ic_today_black"
             android:title="@string/news.header" />
     </group>
 
-    <!-- <item>
-	<menu> -->
-            <item
-                android:id="@+id/nav_about"
-                android:title="@string/about.header" />
-            <item
-                android:id="@+id/nav_settings"
-                android:title="@string/settings.header" />
-        <!--</menu>
-			</item>-->
+    <group
+        android:id="@+id/drawer_bottom"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_info_outline_black"
+            android:title="@string/about.header" />
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings_black"
+            android:title="@string/settings.header" />
+    </group>
 
 </menu>

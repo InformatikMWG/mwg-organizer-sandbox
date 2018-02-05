@@ -23,6 +23,10 @@
             android:name=".Settings"
             android:label="@string/settings.header"
             android:parentActivityName=".MWGOrganizer" />
+        <activity
+            android:name=".About"
+            android:label="@string/about.header"
+            android:parentActivityName=".MWGOrganizer" />
     </application>
 
 </manifest>

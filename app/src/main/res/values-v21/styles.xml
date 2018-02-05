@@ -22,4 +22,13 @@
         <item name="fontFamily">@font/sourcesans</item>
         <item name="android:navigationBarColor">@color/MWGRed</item>
     </style>
+
+    <style name="ThemeOverlay.AppCompat.DrawerTheme">
+        <!-- Color of text and icon when SELECTED -->
+        <item name="colorPrimary">@color/MWGWhite</item>
+
+
+        <!-- Background color when SELECTED -->
+        <item name="colorControlHighlight">@color/MWGRed</item>
+    </style>
 </resources>

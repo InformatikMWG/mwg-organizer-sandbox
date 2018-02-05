@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="MWGRed">#641d1b</color>
+    <color name="MWGWhite">#ffffff</color>
 </resources>

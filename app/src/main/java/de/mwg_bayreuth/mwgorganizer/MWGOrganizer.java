@@ -28,7 +28,9 @@ public class MWGOrganizer extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                // TODO: Aktualisierung auslösen
+                // Snackbar statt Toast "Aktualisierung ..." / "Keine Internetverbindung"
+                Snackbar.make(view, "TODO: Aktualisierung auslösen", Snackbar.LENGTH_SHORT)
                         .setAction("Action", null).show();
             }
         });
@@ -89,7 +91,7 @@ public class MWGOrganizer extends AppCompatActivity
         } else if (id == R.id.nav_news) {
 
         } else if (id == R.id.nav_about) {
-
+            startActivity(new Intent(this, About.class));
         } else if (id == R.id.nav_settings) {
             startActivity(new Intent(this, Settings.class));
         }
