@@ -103,6 +103,10 @@ implements NavigationView.OnNavigationItemSelectedListener,
                 startActivity(new Intent(this, Settings.class));
                 return true;
 
+            case R.id.action_dev_shit:
+                startActivity(new Intent(this, DisplayPDF.class));
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
