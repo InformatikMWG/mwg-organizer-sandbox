@@ -1,9 +1,12 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
+    <!-- TODO: Farbgebung des Gradienten ändern -->
+    <!-- Ein helleres MWG-Rot verwenden? WICHTIG: Genügend Kontrast zum Logo beibehalten!! -->
     <gradient
         android:angle="135"
-        android:centerColor="#009688"
-        android:endColor="#00695C"
-        android:startColor="#4DB6AC"
+        android:endColor="#641D1B"
+        android:centerColor="#9A2D2A"
+        android:startColor="#CA3D3A"
         android:type="linear" />
+    <!-- old start color: DA7674, old center col: ca3d3a old end color cd4a47 -->
 </shape>

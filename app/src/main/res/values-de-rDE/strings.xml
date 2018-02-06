@@ -11,4 +11,5 @@
     <string name="about.header">Über</string>
     <string name="settings.header">Einstellungen</string>
     <string name="home.header">Startseite</string>
+    <string name="settings.cache">Cache-Verwaltung</string>
 </resources>

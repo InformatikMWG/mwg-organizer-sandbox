@@ -1,0 +1,10 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:title="Clear cache"
+        android:summary="Delete local copies of files"
+        android:key="clear_cache_prefbutton" />
+    <Preference
+        android:title="Clear credentials"
+        android:summary="Delete credentials"
+        android:key="clear_cred_prefbutton" />
+</PreferenceScreen>

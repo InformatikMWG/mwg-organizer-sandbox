@@ -84,4 +84,5 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="home.header">Startseite</string>
+    <string name="settings.cache">Cache-Verwaltung</string>
 </resources>
