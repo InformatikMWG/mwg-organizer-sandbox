@@ -34,7 +34,8 @@
         <activity
             android:name=".DisplayPDF"
             android:label="@string/title_activity_display_pdf"
-            android:parentActivityName=".MWGOrganizer"/>
+            android:parentActivityName=".MWGOrganizer" />
+        <activity android:name=".LoginActivity"></activity>
     </application>
 
 </manifest>

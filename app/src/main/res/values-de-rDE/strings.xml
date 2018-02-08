@@ -12,4 +12,8 @@
     <string name="settings.header">Einstellungen</string>
     <string name="home.header">Startseite</string>
     <string name="settings.cache">Cache-Verwaltung</string>
+    <string name="progress.filesfound">Dateien gefunden</string>
+    <string name="progress.searchforfiles">Suche nach veränderten Dateien ...</string>
+    <string name="progress.connect">Verbinden ...</string>
+    <string name="progress.filedlprep">Herunterladen von Dateien vorbereiten ...</string>
 </resources>
