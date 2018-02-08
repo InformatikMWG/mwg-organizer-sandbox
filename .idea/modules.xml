@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MWGOrganizer.iml" filepath="$PROJECT_DIR$/MWGOrganizer.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mwg-organizer.iml" filepath="$PROJECT_DIR$/mwg-organizer.iml" />
     </modules>
   </component>
 </project>
