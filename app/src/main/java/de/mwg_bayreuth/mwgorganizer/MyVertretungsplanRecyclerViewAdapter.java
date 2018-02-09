@@ -7,23 +7,25 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import de.mwg_bayreuth.mwgorganizer.VertretungsplanFragment.OnListFragmentInteractionListener;
-import de.mwg_bayreuth.mwgorganizer.dummy.DummyContent.DummyItem;
+import de.mwg_bayreuth.mwgorganizer.dummy.ListContent;
 
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link ListContent.Item} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class MyVertretungsplanRecyclerViewAdapter extends RecyclerView.Adapter<MyVertretungsplanRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private List<ListContent.Item> mValues;
+    private ViewHolder mViewHolder;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyVertretungsplanRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public MyVertretungsplanRecyclerViewAdapter(List<ListContent.Item> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
+
     }
 
     @Override
@@ -51,6 +53,10 @@ public class MyVertretungsplanRecyclerViewAdapter extends RecyclerView.Adapter<M
         });
     }
 
+    public void updateView()
+    {
+    }
+
     @Override
     public int getItemCount() {
         return mValues.size();
@@ -60,7 +66,7 @@ public class MyVertretungsplanRecyclerViewAdapter extends RecyclerView.Adapter<M
         public final View mView;
         //public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public ListContent.Item mItem;
 
         public ViewHolder(View view) {
             super(view);

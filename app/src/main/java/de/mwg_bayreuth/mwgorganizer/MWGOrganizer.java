@@ -15,7 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import de.mwg_bayreuth.mwgorganizer.dummy.DummyContent;
+import de.mwg_bayreuth.mwgorganizer.dummy.ListContent;
 
 public class MWGOrganizer extends AppCompatActivity
 implements NavigationView.OnNavigationItemSelectedListener,
@@ -159,5 +159,5 @@ implements NavigationView.OnNavigationItemSelectedListener,
     public void onFragmentInteraction(Uri uri) {}
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {}
+    public void onListFragmentInteraction(ListContent.Item item) {}
 }
