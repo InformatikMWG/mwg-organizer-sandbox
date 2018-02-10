@@ -120,6 +120,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
                 speditor.putBoolean(SharedPrefKeys.vplanForceUpdate, true);
                 GetVertretungsplanToolkit gvt = new GetVertretungsplanToolkit(
                         sharedPref, speditor, cachemanager, progDialog, extDirectory, this);
+                // TODO: Snackbar (see #4)
             } else if (currentFSF == FSFEnum.MplanFrag) {
 
             } else if (currentFSF == FSFEnum.NewsFrag) {
@@ -131,9 +132,9 @@ implements NavigationView.OnNavigationItemSelectedListener,
 
     public void setupButtons() {
         if(currentFSF == FSFEnum.VplanFrag) {
-            // TODO: Set up buttons for the Vertretungsplan fragment
+            // TODO: Set up buttons for the Vertretungsplan fragment (see #3)
         }
-        
+
 
     }
 
