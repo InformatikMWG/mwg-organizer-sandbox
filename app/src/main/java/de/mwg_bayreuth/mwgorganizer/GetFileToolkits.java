@@ -15,7 +15,7 @@ abstract class GetFileToolkits {
     SharedPreferences.Editor speditor;
     ProgressDialog dialog;
     File filedir;
-    FileSelectionFragment root;
+    MWGOrganizer root;
 
 
 
@@ -28,7 +28,7 @@ abstract class GetFileToolkits {
      * @param root - the fragment which requires the toolkit
      */
     void setUpReferences(SharedPreferences sharedPref, SharedPreferences.Editor speditor,
-                         ProgressDialog dialog, File filedir, FileSelectionFragment root) {
+                         ProgressDialog dialog, File filedir, MWGOrganizer root) {
         this.sharedPref = sharedPref;
         this.speditor = speditor;
         this.dialog = dialog;

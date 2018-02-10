@@ -38,11 +38,11 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
      * @param cachemanager - an instance of a CacheManager
      * @param dialog - an instance of a progress dialog used to display the progress
      * @param filedir - the path to the directory containing all application files
-     * @param root - the fragment which requires the toolkit
+     * @param root - the activity which requires the toolkit
      */
     GetVertretungsplanToolkit(SharedPreferences sharedPref, SharedPreferences.Editor speditor,
                               CacheManager cachemanager, ProgressDialog dialog, File filedir,
-                              FileSelectionFragment root) {
+                              MWGOrganizer root) {
         setUpReferences(sharedPref, speditor, dialog, filedir, root);
         this.cachemanager = cachemanager;
         new FetchHtmlTask().execute();
@@ -68,11 +68,19 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
         /**
          * Preparation:
          * Reset the file counter & show the dialog
+         * Cancel when no/wrong credentials have been given
          */
         @Override
         protected void onPreExecute() {
+            String username = sharedPref.getString(SharedPrefKeys.credUsername, "dadadidada");
+            String password = sharedPref.getString(SharedPrefKeys.credPassword, "blubblub");
+
+            if((username.equals("dadadidada")) || (password.equals("blubblub"))) {
+                openLogin();
+                cancel(true);
+            } else { dialog.show(); }
+
             totalfilecount = 0;
-            dialog.show();
             return;
         }
 
@@ -117,7 +125,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
         protected Integer doInBackground(Void... params) {
             // Configure progress indicator
             dialog.setProgress(0);
-            String connectstr = root.getActivity().getApplicationContext()
+            String connectstr = root.getApplicationContext()
                                     .getResources().getString(R.string.progress_connect);
             publishProgress(connectstr);
             dialog.setProgressNumberFormat("");
@@ -207,7 +215,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
 
                     boolean newVersionAvailable = false;
 
-                    String searchfilesstr = root.getActivity().getApplicationContext()
+                    String searchfilesstr = root.getApplicationContext()
                                                 .getResources().getString(R.string.progress_searchforfiles);
                     publishProgress(searchfilesstr);
 
@@ -268,7 +276,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                             if(fetchFile) {
                                 totalfilecount += 1;
 
-                                String filesfoundstr = root.getActivity().getApplicationContext()
+                                String filesfoundstr = root.getApplicationContext()
                                                            .getResources().getString(R.string.progress_filesfound);
                                 dialog.setProgressNumberFormat(totalfilecount + " " + filesfoundstr);
 
@@ -295,7 +303,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                     if(res != 13) {
                         // Update sucessful (?): download files, save button nr & update time
 
-                        String fdlprepstr = root.getActivity().getApplicationContext()
+                        String fdlprepstr = root.getApplicationContext()
                                                 .getResources().getString(R.string.progress_filedlprep);
                         publishProgress(fdlprepstr);
                         fetchPDF(foundFiles, totalfilecount);
@@ -403,7 +411,9 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                     InputStream in   = con.getInputStream();
                     int lengthOfFile = con.getContentLength();
 
-                    dialog.setMessage(filelabel);
+                    // TODO: Find a way of changing the file name
+                    // Directly accessing dialog.setMessage is not possible
+                    //dialog.setMessage(filelabel);
                     dialog.setProgress(0);
                     dialog.setMax(lengthOfFile);
                     dialog.setProgressNumberFormat(totalfilecount + " / " + totalfilecount);

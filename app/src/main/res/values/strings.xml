@@ -93,4 +93,13 @@
     <string name="progress.connect">Verbinden ...</string>
     <string name="progress.searchforfiles">Suche nach veränderten Dateien ...</string>
     <string name="progress.filedlprep">Herunterladen von Dateien vorbereiten ...</string>
+    <string name="general.update">Aktualisiere ...</string>
+    <string name="login.username">Benutzername</string>
+    <string name="login.password">Passwort</string>
+    <string name="login.showplaintext">Klartext anzeigen</string>
+    <string name="login.prompt">Bitte geben Sie Zugangsdaten zu einem internen Bereich der Homepage ein:</string>
+    <string name="login.header">Anmelden</string>
+    <string name="login.checkCred">Zugangsdaten überprüfen ...</string>
+    <string name="general.nointernetconnection">Keine Internetverbindung</string>
+    <string name="login.invalidcred">Zugangsdaten ungültig</string>
 </resources>

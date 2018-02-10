@@ -2,7 +2,6 @@ package de.mwg_bayreuth.mwgorganizer;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +11,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+
+
 import de.mwg_bayreuth.mwgorganizer.dummy.ListContent;
 
 /**
@@ -20,8 +21,7 @@ import de.mwg_bayreuth.mwgorganizer.dummy.ListContent;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class VertretungsplanFragment extends Fragment{
-
+public class VertretungsplanFragment extends FileSelectionFragment {
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
@@ -36,8 +36,7 @@ public class VertretungsplanFragment extends Fragment{
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public VertretungsplanFragment() {
-    }
+    public VertretungsplanFragment() { }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
@@ -81,9 +80,10 @@ public class VertretungsplanFragment extends Fragment{
                 @Override
                 public void onClick(View view, final int position) {
                     //TODO: Switch Task for each position
-                    if(listContent != null && position < listContent.ITEMS.size())
-                    {
-                        ListContent.Item ClickedItem = listContent.ITEMS.get(position);
+                    if(listContent != null && position < listContent.ITEMS.size()) {
+                        ListContent.Item clickedItem = listContent.ITEMS.get(position);
+
+
                     }
                 }
 
@@ -135,6 +135,29 @@ public class VertretungsplanFragment extends Fragment{
         mAdapter.notifyDataSetChanged();
     }
 
+
+
+
+
+    @Override
+    void setupButtons() {
+
+    }
+
+    @Override
+    void setLastUpdateTimeLabel() {
+
+    }
+
+    @Override
+    void openLogin() {
+
+    }
+
+
+
+
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -156,7 +179,6 @@ public class VertretungsplanFragment extends Fragment{
     }
 
     class RecyclerTouchListener implements RecyclerView.OnItemTouchListener{
-
         private ClickListener clicklistener;
         private GestureDetector gestureDetector;
 

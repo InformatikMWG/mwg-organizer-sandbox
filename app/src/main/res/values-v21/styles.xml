@@ -5,9 +5,6 @@
         <item name="windowNoTitle">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
 
-        <!-- Use Source Sans as the main font-->
-        <item name="android:fontFamily">@font/sourcesans</item>
-        <item name="fontFamily">@font/sourcesans</item>
         <item name="android:navigationBarColor">@color/MWGRed</item>
     </style>
 
@@ -16,11 +13,6 @@
         <item name="colorPrimary">@color/MWGRed</item>
         <item name="colorPrimaryDark">@color/MWGRed</item>
         <item name="colorAccent">@color/MWGRed</item>
-
-        <!-- Use Source Sans as the main font-->
-        <item name="android:fontFamily">@font/sourcesans</item>
-        <item name="fontFamily">@font/sourcesans</item>
-        <item name="android:navigationBarColor">@color/MWGRed</item>
     </style>
 
     <style name="ThemeOverlay.AppCompat.DrawerTheme">

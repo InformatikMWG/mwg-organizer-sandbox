@@ -1,6 +1,9 @@
 package de.mwg_bayreuth.mwgorganizer;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,6 +18,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.io.File;
+
 import de.mwg_bayreuth.mwgorganizer.dummy.ListContent;
 
 public class MWGOrganizer extends AppCompatActivity
@@ -23,11 +28,37 @@ implements NavigationView.OnNavigationItemSelectedListener,
         HomeFragment.OnFragmentInteractionListener,
         VertretungsplanFragment.OnListFragmentInteractionListener {
 
+    CacheManager cachemanager;
+    File extDirectory;
+    ProgressDialog progDialog;
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor speditor;
+    FSFEnum currentFSF;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mwgorganizer);
+
+
+        sharedPref = getSharedPreferences(SharedPrefKeys.spPrefix, Context.MODE_PRIVATE);
+        speditor = sharedPref.edit();
+
+        extDirectory = getExternalFilesDir(null);
+        cachemanager = new CacheManager(speditor, extDirectory);
+
+        progDialog = new ProgressDialog(this);
+        progDialog.setCanceledOnTouchOutside(false);
+        boolean resistDialogs = true; // TODO: Load from SharedPrefs
+
+        if(resistDialogs) { progDialog.setCancelable(false); }
+        progDialog.setTitle(getApplicationContext()
+                  .getResources().getString(R.string.general_update));
+        progDialog.setMessage(" ");
+        progDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progDialog.setIndeterminate(false);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -37,10 +68,17 @@ implements NavigationView.OnNavigationItemSelectedListener,
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(currentFSF != null) {
+                    // TODO: Check whether Connection to Homepage is possible
+                    if(false) {
+                        Snackbar.make(view, "HEY!!", Snackbar.LENGTH_SHORT)
+                                .setAction("Action", null).show();
+                    } else { MWGOrganizer.this.updateFiles(); }
+                }
+
                 // TODO: Aktualisierung auslösen
                 // Snackbar statt Toast "Aktualisierung ..." / "Keine Internetverbindung"
-                Snackbar.make(view, "TODO: Aktualisierung auslösen", Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null).show();
+
             }
         });
 
@@ -69,6 +107,32 @@ implements NavigationView.OnNavigationItemSelectedListener,
     }
 
 
+    public void updateFiles() {
+        // TODO: Check for internet connection
+        if(false) {
+            // No internet connection: Complain
+            String noconnectionmssg = getApplicationContext().getResources().getString(R.string.general_nointernetconnection);
+            Snackbar.make(findViewById(android.R.id.content), noconnectionmssg, Snackbar.LENGTH_SHORT)
+                    .setAction("Action", null).show();
+        } else {
+            // Internet connection: Update files
+            if (currentFSF == FSFEnum.VplanFrag) {
+                speditor.putBoolean(SharedPrefKeys.vplanForceUpdate, true);
+                GetVertretungsplanToolkit gvt = new GetVertretungsplanToolkit(
+                        sharedPref, speditor, cachemanager, progDialog, extDirectory, this);
+            } else if (currentFSF == FSFEnum.MplanFrag) {
+
+            } else if (currentFSF == FSFEnum.NewsFrag) {
+
+            }
+        }
+    }
+
+
+    public void openLogin() { startActivity(new Intent(this, LoginActivity.class)); }
+
+    public void setupButtons() {}
+    public void setLastUpdateTimeLabel() {}
 
     @Override
     public void onBackPressed() {
@@ -123,10 +187,14 @@ implements NavigationView.OnNavigationItemSelectedListener,
         switch(item.getItemId()) {
             default:
                 fragmentClass = HomeFragment.class;
-                exchangeFragment = true; break;
+                exchangeFragment = true;
+                currentFSF = null;
+                break;
             case R.id.nav_vplan:
                 fragmentClass = VertretungsplanFragment.class;
-                exchangeFragment = true; break;
+                exchangeFragment = true;
+                currentFSF = FSFEnum.VplanFrag;
+                break;
         //    case R.id.nav_mensa:
 
         //    case R.id.nav_news:
@@ -139,8 +207,10 @@ implements NavigationView.OnNavigationItemSelectedListener,
 
         // Do *not* execute this code when an Activity has been opened!!
         if(exchangeFragment) {
-            try { fragment = (android.support.v4.app.Fragment) fragmentClass.newInstance(); }
-            catch (Exception e) { e.printStackTrace(); }
+            try {
+                fragment = (android.support.v4.app.Fragment) fragmentClass.newInstance();
+
+            } catch (Exception e) { e.printStackTrace(); }
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, fragment).commit();
@@ -160,4 +230,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
 
     @Override
     public void onListFragmentInteraction(ListContent.Item item) {}
+
+
+    private enum FSFEnum { VplanFrag, MplanFrag, NewsFrag }
 }
