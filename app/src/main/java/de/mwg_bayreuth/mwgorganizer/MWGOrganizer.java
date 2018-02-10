@@ -116,7 +116,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
                     .setAction("Action", null).show();
         } else {
             // Internet connection: Update files
-            if (currentFSF == FSFEnum.VplanFrag) {
+            if(currentFSF == FSFEnum.VplanFrag) {
                 speditor.putBoolean(SharedPrefKeys.vplanForceUpdate, true);
                 GetVertretungsplanToolkit gvt = new GetVertretungsplanToolkit(
                         sharedPref, speditor, cachemanager, progDialog, extDirectory, this);
@@ -129,9 +129,17 @@ implements NavigationView.OnNavigationItemSelectedListener,
     }
 
 
+    public void setupButtons() {
+        if(currentFSF == FSFEnum.VplanFrag) {
+            // TODO: Set up buttons for the Vertretungsplan fragment
+        }
+        
+
+    }
+
+
     public void openLogin() { startActivity(new Intent(this, LoginActivity.class)); }
 
-    public void setupButtons() {}
     public void setLastUpdateTimeLabel() {}
 
     @Override
