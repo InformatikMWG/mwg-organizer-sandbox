@@ -37,7 +37,8 @@ final class SharedPrefKeys {
     static String mensaButtonFileUpdated = spPrefix + ".mensa.buttons.fileupdated";
 
     // News
-    static String newsLastUpdate = spPrefix + ".news.lastUpdate";
+    static String newsLastUpdate  = spPrefix + ".news.lastUpdate";
+    static String newsForceUpdate = spPrefix + ".news.forceUpdate";
 
     // TODO: Shared Pref Keys for Settings
     // TODO: Shared Pref Keys for Easter Eggs

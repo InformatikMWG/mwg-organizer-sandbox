@@ -27,7 +27,8 @@ import java.util.List;
  */
 class GetVertretungsplanToolkit extends GetFileToolkits {
     private CacheManager cachemanager;
-    private int totalfilecount;
+    private int foundfilescount;
+    private int updatedFiles;
 
 
 
@@ -45,6 +46,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                               MWGOrganizer root) {
         setUpReferences(sharedPref, speditor, dialog, filedir, root);
         this.cachemanager = cachemanager;
+        updatedFiles = 0;
         new FetchHtmlTask().execute();
     }
 
@@ -80,7 +82,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                 cancel(true);
             } else { dialog.show(); }
 
-            totalfilecount = 0;
+            foundfilescount = 0;
             return;
         }
 
@@ -114,6 +116,13 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
         protected void onProgressUpdate(String... filename) {
             dialog.setMessage(filename[0]);
         }
+
+
+        /**
+         * Provides a callback for fetchPDF to update the name of the currently downloaded file
+         * @param filename - the name of the currently downloaded file
+         */
+        void updateFilename(String filename) { publishProgress(filename); }
 
 
         /**
@@ -274,15 +283,15 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
 
                             // old size =/= current size: add PDF file to "FETCH!!"-list
                             if(fetchFile) {
-                                totalfilecount += 1;
+                                foundfilescount += 1;
 
                                 String filesfoundstr = root.getApplicationContext()
                                                            .getResources().getString(R.string.progress_filesfound);
-                                dialog.setProgressNumberFormat(totalfilecount + " " + filesfoundstr);
+                                dialog.setProgressNumberFormat(foundfilescount + " " + filesfoundstr);
 
-                                foundFiles[totalfilecount-1][0] = path;
-                                foundFiles[totalfilecount-1][1] = filename;
-                                foundFiles[totalfilecount-1][2] = label;
+                                foundFiles[foundfilescount-1][0] = path;
+                                foundFiles[foundfilescount-1][1] = filename;
+                                foundFiles[foundfilescount-1][2] = label;
 
                                 speditor.putBoolean(SharedPrefKeys.vplanButtonFileUpdated + i, true);
                             }
@@ -303,11 +312,13 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                     if(res != 13) {
                         // Update sucessful (?): download files, save button nr & update time
 
-                        String fdlprepstr = root.getApplicationContext()
-                                                .getResources().getString(R.string.progress_filedlprep);
-                        publishProgress(fdlprepstr);
-                        fetchPDF(foundFiles, totalfilecount);
-
+                        if(foundfilescount != 0) {
+                            String fdlprepstr = root.getApplicationContext()
+                                                    .getResources().getString(R.string.progress_filedlprep);
+                            publishProgress(fdlprepstr);
+                            fetchPDF(foundFiles, foundfilescount, this);
+                        }
+                        
                         speditor.putInt(SharedPrefKeys.vplanButtonNr, i);
                         speditor.putLong(SharedPrefKeys.vplanLastUpdate, now);
                         speditor.commit();
@@ -331,9 +342,10 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
     /**
      *
      * @param foundFiles - an array containing all found files to be updated
-     * @param totalfilecount - the number of found files
+     * @param foundfilescount - the number of found files
      */
-    private void fetchPDF(String[][] foundFiles, int totalfilecount) {
+    private void fetchPDF(String[][] foundFiles, int foundfilescount,
+                          de.mwg_bayreuth.mwgorganizer.GetVertretungsplanToolkit.FetchHtmlTask root) {
         try {
             String get_url  = "https://www.mwg-bayreuth.de/Login.html";
             String post_url = "https://www.mwg-bayreuth.de/Login.html";
@@ -394,7 +406,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
 
 
             // Download all files in one go
-            for(int i = 0; i < totalfilecount; i++) {
+            for(int i = 0; i < foundfilescount; i++) {
                 String path = foundFiles[i][0];
                 String filename = foundFiles[i][1];
                 String filelabel = foundFiles[i][2];
@@ -411,12 +423,12 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                     InputStream in   = con.getInputStream();
                     int lengthOfFile = con.getContentLength();
 
-                    // TODO: Find a way of changing the file name
+                    // TODO: Find a way of changing the displayed file name
                     // Directly accessing dialog.setMessage is not possible
-                    //dialog.setMessage(filelabel);
+                    root.updateFilename(filelabel);
                     dialog.setProgress(0);
                     dialog.setMax(lengthOfFile);
-                    dialog.setProgressNumberFormat(totalfilecount + " / " + totalfilecount);
+                    dialog.setProgressNumberFormat(foundfilescount + " / " + foundfilescount);
 
 
                     FileOutputStream fos = new FileOutputStream(new File(filedir + "/" + filename));
@@ -434,12 +446,19 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                     fos.close();
                     in.close();
 
+                    updatedFiles++;
 
                     Log.e("test", "File downloaded");
                 } else { Log.e("test", "GET PDF request not worked"); }
             }
         } catch (Exception e) { e.printStackTrace(); }
     }
+
+
+    /**
+     *
+     */
+    int getUpdatedFiles() { return updatedFiles; }
 }
 
 
