@@ -7,6 +7,7 @@
     tools:context="de.mwg_bayreuth.mwgorganizer.LoginActivity">
 
 
+    <!--
     <EditText
         android:id="@+id/InputUsername"
         android:layout_width="0dp"
@@ -49,15 +50,53 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/LoginButton"
-        android:layout_width="wrap_content"
+
+
+
+     -->
+
+    <TextView
+        android:id="@+id/LoginPrompt"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="7dp"
-        android:onClick="login"
-        android:text="@string/login.header"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/login.prompt"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/InputUsername"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/login.username"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/InputPW"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/LoginPrompt" />
+
+    <EditText
+        android:id="@+id/InputPW"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/login.password"
+        android:inputType="textPassword"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/InputUsername" />
 
     <CheckBox
@@ -73,4 +112,15 @@
         android:text="@string/login.showplaintext"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/InputPW" />
+
+    <Button
+        android:id="@+id/LoginButton"
+        android:layout_width="93dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:onClick="login"
+        android:text="@string/login.header"
+        app:layout_constraintBaseline_toBaselineOf="@+id/InputPW"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/InputPW" />
 </android.support.constraint.ConstraintLayout>

@@ -157,10 +157,7 @@ public class VertretungsplanFragment extends FileSelectionFragment {
 
     }
 
-    @Override
-    void openLogin() {
 
-    }
 
     /**
      * This interface must be implemented by activities that contain this

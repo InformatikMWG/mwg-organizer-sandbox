@@ -89,11 +89,17 @@ public class LoginActivity extends AppCompatActivity {
     public void showLetters(View view) {
         boolean checked = ((CheckBox) view).isChecked();
         EditText pw = (EditText) findViewById(R.id.InputPW);
-        if(checked) {
-            pw.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-        } else {
-            pw.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        }
+
+        // save current cursor position
+        int selectionStart = pw.getSelectionStart();
+        int selectionEnd   = pw.getSelectionEnd();
+
+        // switch text to visible / invisible
+        if(checked) { pw.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD); }
+        else        { pw.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD); }
+
+        // Apply saved selection to switched view
+        pw.setSelection(selectionStart, selectionEnd);
     }
 
     private class CheckCredentialsTask extends AsyncTask<String, Void, Boolean> {
@@ -115,6 +121,11 @@ public class LoginActivity extends AppCompatActivity {
             progDialog.dismiss();
             if(isValid) { saveLoginData(username, password); }
             else {
+                // Remove content from the password box
+                EditText pw = (EditText) findViewById(R.id.InputPW);
+                pw.setText("");
+
+                // Get the "Invalid Credentials" string from resources
                 String invalidcredmssg = getApplicationContext().getResources().getString(R.string.login_invalidcred);
 
                 // Build a "invalid credentials" dialog

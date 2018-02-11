@@ -12,5 +12,4 @@ import android.support.v4.app.Fragment;
 abstract class FileSelectionFragment extends Fragment {
     abstract void setupButtons(Context context);
     abstract void setLastUpdateTimeLabel();
-    abstract void openLogin();
 }

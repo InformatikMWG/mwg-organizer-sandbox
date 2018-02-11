@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -73,14 +74,10 @@ implements NavigationView.OnNavigationItemSelectedListener,
                 if(currentFSF != null) {
                     // TODO: Check whether Connection to Homepage is possible
                     if(false) {
-                        Snackbar.make(view, "HEY!!", Snackbar.LENGTH_SHORT)
-                                .setAction("Action", null).show();
+                        // No internet connection: Complain
+                        Snackbar.make(view, R.string.general_nointernetconnection, Snackbar.LENGTH_SHORT).show();
                     } else { MWGOrganizer.this.updateFiles(); }
                 }
-
-                // TODO: Aktualisierung auslösen
-                // Snackbar statt Toast "Aktualisierung ..." / "Keine Internetverbindung"
-
             }
         });
 
@@ -109,36 +106,120 @@ implements NavigationView.OnNavigationItemSelectedListener,
     }
 
 
-    public void updateFiles() {
-        // TODO: Check for internet connection
-        if(false) {
-            // No internet connection: Complain
-            String noconnectionmssg = getApplicationContext().getResources().getString(R.string.general_nointernetconnection);
-            Snackbar.make(findViewById(android.R.id.content), noconnectionmssg, Snackbar.LENGTH_SHORT)
-                    .setAction("Action", null).show();
-        } else {
-            // Internet connection: Update files
-            if(currentFSF == FSFEnum.VplanFrag) {
-                speditor.putBoolean(SharedPrefKeys.vplanForceUpdate, true);
-                GetVertretungsplanToolkit gvt = new GetVertretungsplanToolkit(
-                        sharedPref, speditor, cachemanager, progDialog, extDirectory, this);
-                // TODO: Snackbar (see #4)
-            } else if (currentFSF == FSFEnum.MplanFrag) {
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        Class fragmentClass = null;
 
-            } else if (currentFSF == FSFEnum.NewsFrag) {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        // Handle navigation view item clicks here.
+        switch(item.getItemId()) {
+            default:
+                fragmentClass = HomeFragment.class;
+                currentFSF = null;
+                fab.setVisibility(View.GONE);
+                exchangeFragment(fragmentClass);
+                break;
+            case R.id.nav_vplan:
+                fragmentClass = VertretungsplanFragment.class;
+                currentFSF = FSFEnum.VplanFrag;
+                fab.setVisibility(View.VISIBLE);
+                exchangeFragment(fragmentClass);
+                break;
+            //    case R.id.nav_mensa:
+
+            //    case R.id.nav_news:
+
+            case R.id.nav_about:
+                startActivity(new Intent(this, About.class)); break;
+            case R.id.nav_settings:
+                startActivity(new Intent(this, Settings.class)); break;
+        }
+
+        setTitle(item.getTitle());
+
+        // Close drawer
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+
+
+    private void exchangeFragment(Class fragmentClass) {
+        android.support.v4.app.Fragment fragment = null;
+        try {
+            fragment = (android.support.v4.app.Fragment) fragmentClass.newInstance();
+            if(currentFSF == FSFEnum.VplanFrag) {
+                fileSelectionFragment = (FileSelectionFragment) fragment;
 
             }
+        } catch (Exception e) { e.printStackTrace(); }
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment).commit();
+        initButtons();
+    }
+
+
+
+
+
+
+
+
+    public void updateFiles() {
+        // Checking for internet connection is done in the FAB listener
+        if(currentFSF == FSFEnum.VplanFrag) {
+            speditor.putBoolean(SharedPrefKeys.vplanForceUpdate, true);
+            speditor.commit();
+            GetVertretungsplanToolkit gvt = new GetVertretungsplanToolkit(
+                    sharedPref, speditor, cachemanager, progDialog, extDirectory, this);
+        } else if (currentFSF == FSFEnum.MplanFrag) {
+
+        } else if (currentFSF == FSFEnum.NewsFrag) {
+
         }
     }
 
 
-    public void setupButtons() {
-        if(currentFSF == FSFEnum.VplanFrag) {
-            // TODO: Set up buttons for the Vertretungsplan fragment (see #3)
-            fileSelectionFragment.setupButtons(getApplicationContext());
+    public void showUpdateSummary(boolean isNewsUpdate, int updatedFiles) {
+        View view = getWindow().getDecorView().getRootView();
+        String snackbarString;
+
+        if(updatedFiles != -1) {
+            if (!isNewsUpdate) {
+                if(updatedFiles > 0) {
+                    snackbarString = updatedFiles + " Dateien aktualisiert";
+                } else {
+                    snackbarString = "Alle Dateien aktuell!";
+                }
+            } else {
+                if (updatedFiles > 0) {
+                    snackbarString = "Alle Termine aktuell";
+                } else {
+                    snackbarString = "Termine aktualisiert";
+                }
+            }
+        } else {
+            // Display error string
+            snackbarString = "Update fehlgeschlagen. F***!";
         }
 
+        Log.e("Snackbar string:", snackbarString);
+        Snackbar.make(view, snackbarString, Snackbar.LENGTH_SHORT).show();
+    }
 
+
+    public void initButtons() {
+        if(currentFSF == FSFEnum.VplanFrag)
+            { fileSelectionFragment.setupButtons(getApplicationContext()); }
+    }
+
+    public void setupButtons() {
+        // Uses a dirty, but working hack :D
+        if(currentFSF == FSFEnum.VplanFrag) { exchangeFragment(VertretungsplanFragment.class); }
     }
 
 
@@ -188,57 +269,6 @@ implements NavigationView.OnNavigationItemSelectedListener,
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        android.support.v4.app.Fragment fragment = null;
-        Class fragmentClass = null;
-        boolean exchangeFragment = false;
-
-        // Handle navigation view item clicks here.
-        switch(item.getItemId()) {
-            default:
-                fragmentClass = HomeFragment.class;
-                exchangeFragment = true;
-                currentFSF = null;
-                break;
-            case R.id.nav_vplan:
-                fragmentClass = VertretungsplanFragment.class;
-                exchangeFragment = true;
-                currentFSF = FSFEnum.VplanFrag;
-                break;
-        //    case R.id.nav_mensa:
-
-        //    case R.id.nav_news:
-
-            case R.id.nav_about:
-                startActivity(new Intent(this, About.class)); break;
-            case R.id.nav_settings:
-                startActivity(new Intent(this, Settings.class)); break;
-        }
-
-        // Do *not* execute this code when an Activity has been opened!!
-        if(exchangeFragment) {
-            try {
-                fragment = (android.support.v4.app.Fragment) fragmentClass.newInstance();
-                if(currentFSF == FSFEnum.VplanFrag)
-                {
-                    fileSelectionFragment = (FileSelectionFragment) fragment;
-                }
-
-            } catch (Exception e) { e.printStackTrace(); }
-
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, fragment).commit();
-
-            setTitle(item.getTitle());
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        setupButtons();
-        return true;
-    }
 
 
     // Has to be overridden, otherwise nasty crashes occurr

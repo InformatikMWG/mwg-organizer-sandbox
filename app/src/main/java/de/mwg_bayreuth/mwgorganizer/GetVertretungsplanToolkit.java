@@ -46,7 +46,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                               MWGOrganizer root) {
         setUpReferences(sharedPref, speditor, dialog, filedir, root);
         this.cachemanager = cachemanager;
-        updatedFiles = 0;
+        updatedFiles = -1;
         new FetchHtmlTask().execute();
     }
 
@@ -101,9 +101,10 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                 cachemanager.clearCredentials();
                 openLogin();
             } else { // Create buttons, set time label, delete old files
-                setupButtons();
+                root.setupButtons();
                 setLastUpdateTimeLabel();
                 deleteFiles();
+                root.showUpdateSummary(false, updatedFiles);
             }
         }
 
@@ -404,6 +405,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
             responseCode = con.getResponseCode();
             Log.e("test", "POST Response Code :: " + responseCode);
 
+            updatedFiles = 0;
 
             // Download all files in one go
             for(int i = 0; i < foundfilescount; i++) {
@@ -423,12 +425,10 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                     InputStream in   = con.getInputStream();
                     int lengthOfFile = con.getContentLength();
 
-                    // TODO: Find a way of changing the displayed file name
-                    // Directly accessing dialog.setMessage is not possible
                     root.updateFilename(filelabel);
                     dialog.setProgress(0);
                     dialog.setMax(lengthOfFile);
-                    dialog.setProgressNumberFormat(foundfilescount + " / " + foundfilescount);
+                    dialog.setProgressNumberFormat((updatedFiles + 1) + " / " + foundfilescount);
 
 
                     FileOutputStream fos = new FileOutputStream(new File(filedir + "/" + filename));
@@ -453,12 +453,6 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
             }
         } catch (Exception e) { e.printStackTrace(); }
     }
-
-
-    /**
-     *
-     */
-    int getUpdatedFiles() { return updatedFiles; }
 }
 
 
