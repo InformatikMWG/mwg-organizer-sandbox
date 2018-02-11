@@ -1,6 +1,7 @@
 package de.mwg_bayreuth.mwgorganizer;
 
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 
 
@@ -9,7 +10,7 @@ import android.support.v4.app.Fragment;
  * FileSelectionFragment
  */
 abstract class FileSelectionFragment extends Fragment {
-    abstract void setupButtons();
+    abstract void setupButtons(Context context);
     abstract void setLastUpdateTimeLabel();
     abstract void openLogin();
 }

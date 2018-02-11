@@ -1,6 +1,7 @@
 package de.mwg_bayreuth.mwgorganizer;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,12 +32,16 @@ public class VertretungsplanFragment extends FileSelectionFragment {
     private ListContent listContent = null;
     private OnListFragmentInteractionListener mListener;
     private MyVertretungsplanRecyclerViewAdapter mAdapter;
+    private SharedPreferences sharedPref;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public VertretungsplanFragment() { }
+    public VertretungsplanFragment() {
+        super();
+        listContent= new ListContent();
+    }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
@@ -71,7 +76,6 @@ public class VertretungsplanFragment extends FileSelectionFragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            listContent= new ListContent();
             mAdapter = new MyVertretungsplanRecyclerViewAdapter(listContent.ITEMS, mListener);
             recyclerView.setAdapter(mAdapter);
             recyclerView.addOnItemTouchListener(new RecyclerTouchListener(mContext,
@@ -79,11 +83,9 @@ public class VertretungsplanFragment extends FileSelectionFragment {
 
                 @Override
                 public void onClick(View view, final int position) {
-                    //TODO: Switch Task for each position
                     if(listContent != null && position < listContent.ITEMS.size()) {
                         ListContent.Item clickedItem = listContent.ITEMS.get(position);
-
-
+                        clickedItem.openPDF();
                     }
                 }
 
@@ -132,16 +134,21 @@ public class VertretungsplanFragment extends FileSelectionFragment {
     public void addItem(ListContent.Item item)
     {
         listContent.addItem(item);
+        if(mAdapter != null)
         mAdapter.notifyDataSetChanged();
     }
 
 
-
-
-
     @Override
-    void setupButtons() {
-
+    void setupButtons(Context context) {
+        sharedPref = context.getSharedPreferences(SharedPrefKeys.spPrefix, Context.MODE_PRIVATE);
+        int nrButtons = sharedPref.getInt(SharedPrefKeys.vplanButtonNr,0);
+        for(int i = 0; i < nrButtons; i++)
+        {
+            addItem(new ListContent.Item(""+i,sharedPref.getString(SharedPrefKeys.vplanButtonLabel+i, "NULL"),
+                    sharedPref.getString(SharedPrefKeys.vplanButtonFilename+i, "NULL")
+                    ,sharedPref.getBoolean(SharedPrefKeys.vplanButtonFileUpdated+i, false)));
+        }
     }
 
     @Override
@@ -153,10 +160,6 @@ public class VertretungsplanFragment extends FileSelectionFragment {
     void openLogin() {
 
     }
-
-
-
-
 
     /**
      * This interface must be implemented by activities that contain this

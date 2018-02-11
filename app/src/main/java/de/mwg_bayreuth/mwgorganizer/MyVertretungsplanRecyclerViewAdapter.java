@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import de.mwg_bayreuth.mwgorganizer.VertretungsplanFragment.OnListFragmentInteractionListener;
@@ -40,6 +41,10 @@ public class MyVertretungsplanRecyclerViewAdapter extends RecyclerView.Adapter<M
         holder.mItem = mValues.get(position);
         //holder.mIdView.setText(mValues.get(position).id);
         holder.mContentView.setText(mValues.get(position).content);
+        if(!holder.mItem.updated)
+            holder.mUpToDateButton.setVisibility(View.INVISIBLE);
+        else
+            holder.mUpToDateButton.setVisibility(View.VISIBLE);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,9 +58,6 @@ public class MyVertretungsplanRecyclerViewAdapter extends RecyclerView.Adapter<M
         });
     }
 
-    public void updateView()
-    {
-    }
 
     @Override
     public int getItemCount() {
@@ -66,6 +68,7 @@ public class MyVertretungsplanRecyclerViewAdapter extends RecyclerView.Adapter<M
         public final View mView;
         //public final TextView mIdView;
         public final TextView mContentView;
+        public final ImageView mUpToDateButton;
         public ListContent.Item mItem;
 
         public ViewHolder(View view) {
@@ -73,6 +76,7 @@ public class MyVertretungsplanRecyclerViewAdapter extends RecyclerView.Adapter<M
             mView = view;
             //mIdView = (TextView) view.findViewById(R.id.id);
             mContentView = (TextView) view.findViewById(R.id.content);
+            mUpToDateButton = (ImageView) view.findViewById(R.id.upToDate);
         }
 
         @Override

@@ -47,14 +47,20 @@ public class ListContent {
     public static class Item {
         public final String id;
         public final String content;
-        public final String details;
+        public final String filepath;
+        public boolean updated;
 
-        public Item(String id, String content, String details) {
+        public Item(String id, String content, String details, boolean upToDate) {
             this.id = id;
             this.content = content;
-            this.details = details;
+            this.filepath = details;
+            this.updated = upToDate;
         }
 
+        public void openPDF()
+        {
+            //TODO: open PDFView
+        }
         @Override
         public String toString() {
             return content;

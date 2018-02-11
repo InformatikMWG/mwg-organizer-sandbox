@@ -34,6 +34,8 @@ implements NavigationView.OnNavigationItemSelectedListener,
     SharedPreferences sharedPref;
     SharedPreferences.Editor speditor;
     FSFEnum currentFSF;
+    FileSelectionFragment fileSelectionFragment;
+
 
 
     @Override
@@ -133,6 +135,8 @@ implements NavigationView.OnNavigationItemSelectedListener,
     public void setupButtons() {
         if(currentFSF == FSFEnum.VplanFrag) {
             // TODO: Set up buttons for the Vertretungsplan fragment (see #3)
+            fileSelectionFragment.setupButtons(getApplicationContext());
+
         }
 
 
@@ -218,6 +222,10 @@ implements NavigationView.OnNavigationItemSelectedListener,
         if(exchangeFragment) {
             try {
                 fragment = (android.support.v4.app.Fragment) fragmentClass.newInstance();
+                if(currentFSF == FSFEnum.VplanFrag)
+                {
+                    fileSelectionFragment = (FileSelectionFragment) fragment;
+                }
 
             } catch (Exception e) { e.printStackTrace(); }
 
@@ -229,6 +237,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+        setupButtons();
         return true;
     }
 
