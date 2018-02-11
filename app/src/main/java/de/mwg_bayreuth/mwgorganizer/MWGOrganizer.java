@@ -135,6 +135,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
     public void setupButtons() {
         if(currentFSF == FSFEnum.VplanFrag) {
             // TODO: Set up buttons for the Vertretungsplan fragment (see #3)
+            fileSelectionFragment.setupButtons(getApplicationContext());
         }
 
 

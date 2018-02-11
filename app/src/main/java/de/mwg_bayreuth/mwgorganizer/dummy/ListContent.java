@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.mwg_bayreuth.mwgorganizer.DisplayPDF;
+
 /**
  * Helper class for providing sample content for user interfaces created by
  * Android template wizards.
@@ -59,7 +61,8 @@ public class ListContent {
 
         public void openPDF()
         {
-            //TODO: open PDFView
+
+            //TODO: open PDFView with filepath
         }
         @Override
         public String toString() {

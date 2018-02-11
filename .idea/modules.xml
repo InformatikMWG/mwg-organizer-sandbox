@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://C:\Users\Erich\StudioProjects\mwg-organizer\MWGOrganizer.iml" filepath="C:\Users\Erich\StudioProjects\mwg-organizer\MWGOrganizer.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/mwg-organizer.iml" filepath="$PROJECT_DIR$/mwg-organizer.iml" />
     </modules>
