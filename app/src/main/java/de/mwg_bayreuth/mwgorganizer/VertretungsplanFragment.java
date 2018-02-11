@@ -141,6 +141,7 @@ public class VertretungsplanFragment extends FileSelectionFragment {
 
     @Override
     void setupButtons(Context context) {
+        listContent = new ListContent();
         sharedPref = context.getSharedPreferences(SharedPrefKeys.spPrefix, Context.MODE_PRIVATE);
         int nrButtons = sharedPref.getInt(SharedPrefKeys.vplanButtonNr,0);
         for(int i = 0; i < nrButtons; i++)
