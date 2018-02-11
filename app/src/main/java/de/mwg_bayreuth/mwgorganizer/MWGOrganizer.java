@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,8 +19,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.io.File;
-
-import de.mwg_bayreuth.mwgorganizer.dummy.ListContent;
 
 public class MWGOrganizer extends AppCompatActivity
 implements NavigationView.OnNavigationItemSelectedListener,
@@ -191,23 +188,18 @@ implements NavigationView.OnNavigationItemSelectedListener,
         if(updatedFiles != -1) {
             if (!isNewsUpdate) {
                 if(updatedFiles > 0) {
-                    snackbarString = updatedFiles + " Dateien aktualisiert";
-                } else {
-                    snackbarString = "Alle Dateien aktuell!";
-                }
+                    String filesupdatedstr = getApplicationContext().getResources().getString(R.string.progress_filesupdated);
+                    snackbarString = updatedFiles + " " + filesupdatedstr;
+                } else { snackbarString = getApplicationContext().getResources().getString(R.string.progress_allfilesuptodate); }
             } else {
-                if (updatedFiles > 0) {
-                    snackbarString = "Alle Termine aktuell";
-                } else {
-                    snackbarString = "Termine aktualisiert";
-                }
+                // News update: no further information
+                snackbarString = getApplicationContext().getResources().getString(R.string.progress_newsupdated);
             }
         } else {
             // Display error string
-            snackbarString = "Update fehlgeschlagen. F***!";
+            snackbarString = getApplicationContext().getResources().getString(R.string.progress_updatefail);
         }
 
-        Log.e("Snackbar string:", snackbarString);
         Snackbar.make(view, snackbarString, Snackbar.LENGTH_SHORT).show();
     }
 
@@ -227,6 +219,8 @@ implements NavigationView.OnNavigationItemSelectedListener,
 
     public void setLastUpdateTimeLabel() {}
 
+
+    
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -238,6 +232,8 @@ implements NavigationView.OnNavigationItemSelectedListener,
             super.onBackPressed();
         }
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -276,7 +272,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
     public void onFragmentInteraction(Uri uri) {}
 
     @Override
-    public void onListFragmentInteraction(ListContent.Item item) {}
+    public void onListFragmentInteraction(FileSelectionListContent.Item item) {}
 
 
     private enum FSFEnum { VplanFrag, MplanFrag, NewsFrag }

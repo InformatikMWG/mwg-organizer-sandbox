@@ -8,22 +8,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import de.mwg_bayreuth.mwgorganizer.VertretungsplanFragment.OnListFragmentInteractionListener;
-import de.mwg_bayreuth.mwgorganizer.dummy.ListContent;
 
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link ListContent.Item} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link FileSelectionListContent.Item} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class MyVertretungsplanRecyclerViewAdapter extends RecyclerView.Adapter<MyVertretungsplanRecyclerViewAdapter.ViewHolder> {
 
-    private List<ListContent.Item> mValues;
+    private List<FileSelectionListContent.Item> mValues;
     private ViewHolder mViewHolder;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyVertretungsplanRecyclerViewAdapter(List<ListContent.Item> items, OnListFragmentInteractionListener listener) {
+    public MyVertretungsplanRecyclerViewAdapter(List<FileSelectionListContent.Item> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
 
@@ -41,10 +40,8 @@ public class MyVertretungsplanRecyclerViewAdapter extends RecyclerView.Adapter<M
         holder.mItem = mValues.get(position);
         //holder.mIdView.setText(mValues.get(position).id);
         holder.mContentView.setText(mValues.get(position).content);
-        if(!holder.mItem.updated)
-            holder.mUpToDateButton.setVisibility(View.INVISIBLE);
-        else
-            holder.mUpToDateButton.setVisibility(View.VISIBLE);
+        if(!holder.mItem.updated) holder.mUpToDateButton.setVisibility(View.INVISIBLE);
+        else                      holder.mUpToDateButton.setVisibility(View.VISIBLE);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +66,7 @@ public class MyVertretungsplanRecyclerViewAdapter extends RecyclerView.Adapter<M
         //public final TextView mIdView;
         public final TextView mContentView;
         public final ImageView mUpToDateButton;
-        public ListContent.Item mItem;
+        public FileSelectionListContent.Item mItem;
 
         public ViewHolder(View view) {
             super(view);

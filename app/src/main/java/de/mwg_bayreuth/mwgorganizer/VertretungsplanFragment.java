@@ -12,10 +12,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-
-
-import de.mwg_bayreuth.mwgorganizer.dummy.ListContent;
-
 /**
  * A fragment representing a list of Items.
  * <p/>
@@ -29,7 +25,7 @@ public class VertretungsplanFragment extends FileSelectionFragment {
     private int mColumnCount = 1;
     private Context mContext = null;
     private RecyclerView recyclerView = null;
-    private ListContent listContent = null;
+    private FileSelectionListContent fileSelectionListContent = null;
     private OnListFragmentInteractionListener mListener;
     private MyVertretungsplanRecyclerViewAdapter mAdapter;
     private SharedPreferences sharedPref;
@@ -40,7 +36,7 @@ public class VertretungsplanFragment extends FileSelectionFragment {
      */
     public VertretungsplanFragment() {
         super();
-        listContent= new ListContent();
+        fileSelectionListContent = new FileSelectionListContent();
     }
 
     // TODO: Customize parameter initialization
@@ -76,15 +72,15 @@ public class VertretungsplanFragment extends FileSelectionFragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            mAdapter = new MyVertretungsplanRecyclerViewAdapter(listContent.ITEMS, mListener);
+            mAdapter = new MyVertretungsplanRecyclerViewAdapter(fileSelectionListContent.ITEMS, mListener);
             recyclerView.setAdapter(mAdapter);
             recyclerView.addOnItemTouchListener(new RecyclerTouchListener(mContext,
                     recyclerView, new ClickListener() {
 
                 @Override
                 public void onClick(View view, final int position) {
-                    if(listContent != null && position < listContent.ITEMS.size()) {
-                        ListContent.Item clickedItem = listContent.ITEMS.get(position);
+                    if(fileSelectionListContent != null && position < fileSelectionListContent.ITEMS.size()) {
+                        FileSelectionListContent.Item clickedItem = fileSelectionListContent.ITEMS.get(position);
                         clickedItem.openPDF();
                     }
                 }
@@ -123,7 +119,7 @@ public class VertretungsplanFragment extends FileSelectionFragment {
      */
     public void removeItem(int position)
     {
-        listContent.removeItem(position);
+        fileSelectionListContent.removeItem(position);
         mAdapter.notifyDataSetChanged();
     }
 
@@ -131,9 +127,9 @@ public class VertretungsplanFragment extends FileSelectionFragment {
      * Adding an item at the back of the List
      * @param item      Item to add to the List
      */
-    public void addItem(ListContent.Item item)
+    public void addItem(FileSelectionListContent.Item item)
     {
-        listContent.addItem(item);
+        fileSelectionListContent.addItem(item);
         if(mAdapter != null)
         mAdapter.notifyDataSetChanged();
     }
@@ -141,14 +137,14 @@ public class VertretungsplanFragment extends FileSelectionFragment {
 
     @Override
     void setupButtons(Context context) {
-        listContent = new ListContent();
+        fileSelectionListContent = new FileSelectionListContent();
         sharedPref = context.getSharedPreferences(SharedPrefKeys.spPrefix, Context.MODE_PRIVATE);
         int nrButtons = sharedPref.getInt(SharedPrefKeys.vplanButtonNr,0);
-        for(int i = 0; i < nrButtons; i++)
-        {
-            addItem(new ListContent.Item(""+i,sharedPref.getString(SharedPrefKeys.vplanButtonLabel+i, "NULL"),
-                    sharedPref.getString(SharedPrefKeys.vplanButtonFilename+i, "NULL")
-                    ,sharedPref.getBoolean(SharedPrefKeys.vplanButtonFileUpdated+i, false)));
+        for(int i = 0; i < nrButtons; i++) {
+            addItem(new FileSelectionListContent.Item(""+i,
+                    sharedPref.getString(SharedPrefKeys.vplanButtonLabel+i, "NULL"),
+                    sharedPref.getString(SharedPrefKeys.vplanButtonFilename+i, "NULL"),
+                    sharedPref.getBoolean(SharedPrefKeys.vplanButtonFileUpdated+i, false)));
         }
     }
 
@@ -171,7 +167,7 @@ public class VertretungsplanFragment extends FileSelectionFragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(ListContent.Item item);
+        void onListFragmentInteraction(FileSelectionListContent.Item item);
     }
 
     public static interface ClickListener{

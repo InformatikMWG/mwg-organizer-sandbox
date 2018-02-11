@@ -25,4 +25,8 @@
     <string name="login.checkCred">Zugangsdaten überprüfen ...</string>
     <string name="general.nointernetconnection">Keine Internetverbindung</string>
     <string name="login.invalidcred">Zugangsdaten ungültig</string>
+    <string name="progress.filesupdated">Dateien aktualisiert</string>
+    <string name="progress.allfilesuptodate">Alle Dateien sind bereits aktuell</string>
+    <string name="progress.newsupdated">Termine wurden aktualisiert</string>
+    <string name="progress.updatefail">Aktualisierung fehlgeschlagen</string>
 </resources>

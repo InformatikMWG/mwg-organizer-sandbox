@@ -184,7 +184,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                         }
                     }
                     in.close();
-                } else { Log.e("test", "GET request failed"); }
+                } else { updatedFiles = -1; Log.e("test", "GET request failed"); }
 
                 CookieStore cookieJar = manager.getCookieStore();
                 List<HttpCookie> cookies = cookieJar.getCookies();
@@ -280,7 +280,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
 
                                 String oldFilename = sharedPref.getString(SharedPrefKeys.vplanButtonFilename + i, "dadadidada blubblub");
                                 if(!oldFilename.equals(filename)) { fetchFile = true; }
-                            } else if (!oldSize.equals(size)) { fetchFile = true;}
+                            } else if (!oldSize.equals(size)) { fetchFile = true; }
 
                             // old size =/= current size: add PDF file to "FETCH!!"-list
                             if(fetchFile) {
@@ -313,6 +313,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                     if(res != 13) {
                         // Update sucessful (?): download files, save button nr & update time
 
+                        updatedFiles = 0;
                         if(foundfilescount != 0) {
                             String fdlprepstr = root.getApplicationContext()
                                                     .getResources().getString(R.string.progress_filedlprep);
@@ -328,8 +329,8 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                         speditor.putInt(SharedPrefKeys.vplanButtonNr, 0);
                         speditor.commit();
                     }
-                }
-            } catch (Exception e) { e.printStackTrace(); }
+                } else { updatedFiles = -1; }
+            } catch (Exception e) { updatedFiles = -1; e.printStackTrace(); }
 
             finally {
                 dialog.setMax(1);
@@ -382,7 +383,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                     }
                 }
                 in.close();
-            } else { Log.e("test", "GET request not worked"); }
+            } else { updatedFiles = -1; Log.e("test", "GET request not worked"); }
 
             CookieStore cookieJar = manager.getCookieStore();
             List<HttpCookie> cookies = cookieJar.getCookies();
@@ -405,7 +406,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
             responseCode = con.getResponseCode();
             Log.e("test", "POST Response Code :: " + responseCode);
 
-            updatedFiles = 0;
+
 
             // Download all files in one go
             for(int i = 0; i < foundfilescount; i++) {
@@ -451,7 +452,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                     Log.e("test", "File downloaded");
                 } else { Log.e("test", "GET PDF request not worked"); }
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) { updatedFiles = -1; e.printStackTrace(); }
     }
 }
 
