@@ -6,6 +6,10 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
 
         <item name="android:navigationBarColor">@color/MWGRed</item>
+
+        <!-- Use Fira Sans as the main font-->
+        <item name="android:fontFamily">@font/firasans</item>
+        <item name="fontFamily">@font/firasans</item>
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -13,6 +17,10 @@
         <item name="colorPrimary">@color/MWGRed</item>
         <item name="colorPrimaryDark">@color/MWGRed</item>
         <item name="colorAccent">@color/MWGRed</item>
+
+        <!-- Use Fira Sans as the main font-->
+        <item name="android:fontFamily">@font/firasans</item>
+        <item name="fontFamily">@font/firasans</item>
     </style>
 
     <style name="ThemeOverlay.AppCompat.DrawerTheme">
@@ -22,5 +30,11 @@
 
         <!-- Background color when SELECTED -->
         <item name="colorControlHighlight">@color/MWGRed</item>
+
+        <item name="android:navigationBarColor">@color/MWGRed</item>
+
+        <!-- Use Fira Sans as the main font-->
+        <item name="android:fontFamily">@font/firasans</item>
+        <item name="fontFamily">@font/firasans</item>
     </style>
 </resources>

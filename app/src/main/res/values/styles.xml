@@ -6,16 +6,28 @@
         <item name="colorPrimary">@color/MWGRed</item>
         <item name="colorPrimaryDark">@color/MWGRed</item>
         <item name="colorAccent">@color/MWGRed</item>
+
+        <!-- Use Fira Sans as the main font-->
+        <item name="android:fontFamily">@font/firasans</item>
+        <item name="fontFamily">@font/firasans</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
+        <!-- Use Fira Sans as the main font-->
+        <item name="android:fontFamily">@font/firasans</item>
+        <item name="fontFamily">@font/firasans</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+        <!-- Use Fira Sans as the main font-->
+        <item name="android:fontFamily">@font/firasans</item>
+        <item name="fontFamily">@font/firasans</item>
+    </style>
 
     <style name="ThemeOverlay.AppCompat.DrawerTheme">
         <!-- Color of text and icon when SELECTED -->
@@ -23,5 +35,10 @@
 
         <!-- Background color when SELECTED -->
         <item name="colorControlHighlight">@color/MWGRed</item>
+
+        <!-- Use Fira Sans as the main font-->
+        <item name="android:fontFamily">@font/firasans</item>
+        <item name="fontFamily">@font/firasans</item>
     </style>
+
 </resources>
