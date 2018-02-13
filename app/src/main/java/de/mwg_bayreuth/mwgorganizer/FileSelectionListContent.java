@@ -32,13 +32,15 @@ public class FileSelectionListContent {
         ITEMS.remove(position);
     }
 
-    private static String makeDetails(int position) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Details about Item: ").append(position);
-        for (int i = 0; i < position; i++) {
-            builder.append("\nMore details information here.");
+    public String[][] openPDF()
+    {
+        String[][] pdffiles = new String[ITEMS.size()][2];
+        for(int i = 0; i < ITEMS.size(); i++)
+        {
+            pdffiles[i][0] = ITEMS.get(i).content;
+            pdffiles[i][1] = ITEMS.get(i).filepath;
         }
-        return builder.toString();
+        return pdffiles;
     }
 
     /**
@@ -57,11 +59,6 @@ public class FileSelectionListContent {
             this.updated = upToDate;
         }
 
-        public void openPDF()
-        {
-
-            //TODO: open PDFView with filepath
-        }
         @Override
         public String toString() {
             return content;

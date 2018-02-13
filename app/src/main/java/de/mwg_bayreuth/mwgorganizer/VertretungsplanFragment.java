@@ -80,8 +80,11 @@ public class VertretungsplanFragment extends FileSelectionFragment {
                 @Override
                 public void onClick(View view, final int position) {
                     if(fileSelectionListContent != null && position < fileSelectionListContent.ITEMS.size()) {
-                        FileSelectionListContent.Item clickedItem = fileSelectionListContent.ITEMS.get(position);
-                        clickedItem.openPDF();
+                        //The pdffilesArray is returned
+                        //int position is the value of the chosen pdffile
+                        //int currentfile = position
+                        String[][] pdffiles = fileSelectionListContent.openPDF();
+
                     }
                 }
 
