@@ -52,10 +52,10 @@ public class FileSelectionListContent {
         public final String filepath;
         public boolean updated;
 
-        public Item(String id, String content, String details, boolean upToDate) {
+        public Item(String id, String content, String filename, boolean upToDate) {
             this.id = id;
             this.content = content;
-            this.filepath = details;
+            this.filepath = filename;
             this.updated = upToDate;
         }
 

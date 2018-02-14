@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.URL;
 
 public class LoginActivity extends AppCompatActivity {
@@ -43,7 +44,14 @@ public class LoginActivity extends AppCompatActivity {
         if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                 connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
             //we are connected to a network
-            return true;
+            try {
+                InetAddress ipAddr = InetAddress.getByName("www.google.com");
+                //You can replace it with your name
+                return !ipAddr.equals("");
+
+            } catch (Exception e) {
+                return false;
+            }
         }
         else
             return false;

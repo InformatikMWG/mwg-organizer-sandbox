@@ -1,6 +1,7 @@
 package de.mwg_bayreuth.mwgorganizer;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -84,6 +85,21 @@ public class VertretungsplanFragment extends FileSelectionFragment {
                         //int position is the value of the chosen pdffile
                         //int currentfile = position
                         String[][] pdffiles = fileSelectionListContent.openPDF();
+                        String[] filenames = new String[pdffiles.length];
+                        String[] filelabels = new String[pdffiles.length];
+                        for(int i = 0; i < pdffiles.length; i++)
+                        {
+                            filenames[i] = pdffiles[i][1];
+                            filelabels[i] = pdffiles[i][0];
+                        }
+
+                        Intent intent = new Intent(getActivity(), DisplayPDF.class);
+                        intent.putExtra("CURRENTFILE", position);
+                        intent.putExtra("NUMBEROFFILES", pdffiles.length);
+                        intent.putExtra("PDFFILENAMES",filenames);
+                        intent.putExtra("PDFFILELABELS",filelabels);
+                        startActivity(intent);
+
 
                     }
                 }

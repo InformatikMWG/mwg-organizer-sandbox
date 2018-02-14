@@ -45,10 +45,15 @@ public class DisplayPDF extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_pdf);
 
+        Intent intent = getIntent();
+        int numberOfFiles =  intent.getIntExtra("NUMBEROFFILES",0);
+        String[] filenames = intent.getStringArrayExtra("PDFFILENAMES");
+        String[] labels = intent.getStringArrayExtra("PDFFILELABELS");
+        int currentFile = intent.getIntExtra("CURRENTFILE", 0);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), numberOfFiles, filenames);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -128,9 +133,13 @@ public class DisplayPDF extends AppCompatActivity {
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
+        private int numberOfFiles;
+        private String[] filenames;
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        public SectionsPagerAdapter(FragmentManager fm, int numberOfFiles, String[] filenames) {
             super(fm);
+            this.numberOfFiles = numberOfFiles;
+            this.filenames = filenames;
         }
 
         @Override
@@ -138,15 +147,13 @@ public class DisplayPDF extends AppCompatActivity {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
 
-            // TODO: Dateiname positionsabhängig -> Parameter durchschieben
-            String filename = getExternalFilesDir(null) + "/blub.pdf";
+            String filename = getExternalFilesDir(null) +"/"+ filenames[position];
             return PlaceholderFragment.newInstance(position + 1, filename);
         }
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 5;
+            return numberOfFiles;
         }
     }
 }
