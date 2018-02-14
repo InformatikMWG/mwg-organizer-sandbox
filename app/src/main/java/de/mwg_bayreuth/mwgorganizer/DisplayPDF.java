@@ -1,6 +1,8 @@
 package de.mwg_bayreuth.mwgorganizer;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -39,6 +41,8 @@ public class DisplayPDF extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +62,11 @@ public class DisplayPDF extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setCurrentItem(currentFile);
+        mSharedPreferences = getSharedPreferences(SharedPrefKeys.spPrefix, Context.MODE_PRIVATE);
+        mEditor = mSharedPreferences.edit();
+        mEditor.putBoolean(SharedPrefKeys.vplanButtonFileUpdated+currentFile, false);
+        mEditor.commit();
     }
 
 
