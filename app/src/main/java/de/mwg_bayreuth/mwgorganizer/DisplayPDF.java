@@ -53,7 +53,7 @@ public class DisplayPDF extends AppCompatActivity {
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), numberOfFiles, filenames);
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), numberOfFiles, filenames, labels);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -93,7 +93,7 @@ public class DisplayPDF extends AppCompatActivity {
          * The fragment argument representing the section number for this
          * fragment.
          */
-        private static final String ARG_SECTION_NUMBER = "section_number";
+        private static final String ARG_LABEL = "LABEL";
 
         public PlaceholderFragment() {
         }
@@ -102,10 +102,10 @@ public class DisplayPDF extends AppCompatActivity {
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static PlaceholderFragment newInstance(int sectionNumber, String filename) {
+        public static PlaceholderFragment newInstance(int sectionNumber, String filename, String filelabel) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            args.putString(ARG_LABEL, filelabel);
             fragment.setArguments(args);
             PlaceholderFragment.filename = filename;
             return fragment;
@@ -116,7 +116,7 @@ public class DisplayPDF extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_pdfdisplay, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            textView.setText(getArguments().getString(ARG_LABEL));
 
             PDFView pdfview = (PDFView) rootView.findViewById(R.id.pdfView);
 
@@ -135,20 +135,22 @@ public class DisplayPDF extends AppCompatActivity {
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
         private int numberOfFiles;
         private String[] filenames;
+        private String[] filelabels;
 
-        public SectionsPagerAdapter(FragmentManager fm, int numberOfFiles, String[] filenames) {
+        public SectionsPagerAdapter(FragmentManager fm, int numberOfFiles, String[] filenames, String[] filelabels) {
             super(fm);
             this.numberOfFiles = numberOfFiles;
             this.filenames = filenames;
+            this.filelabels = filelabels;
         }
 
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-
+            String filelabel = filelabels[position];
             String filename = getExternalFilesDir(null) +"/"+ filenames[position];
-            return PlaceholderFragment.newInstance(position + 1, filename);
+            return PlaceholderFragment.newInstance(position + 1, filename,filelabel);
         }
 
         @Override
