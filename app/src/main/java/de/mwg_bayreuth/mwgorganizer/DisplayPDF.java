@@ -88,7 +88,7 @@ public class DisplayPDF extends AppCompatActivity {
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
-        static String filename;
+        String filename;
         /**
          * The fragment argument representing the section number for this
          * fragment.
@@ -107,7 +107,7 @@ public class DisplayPDF extends AppCompatActivity {
             Bundle args = new Bundle();
             args.putString(ARG_LABEL, filelabel);
             fragment.setArguments(args);
-            PlaceholderFragment.filename = filename;
+            fragment.filename = filename;
             return fragment;
         }
 
