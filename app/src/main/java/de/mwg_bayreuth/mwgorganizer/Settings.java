@@ -3,6 +3,7 @@ package de.mwg_bayreuth.mwgorganizer;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -187,6 +188,23 @@ public class Settings extends AppCompatPreferenceActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_cache);
+            findPreference("clear_cache_prefbutton").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+            {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    new CacheManager(getActivity().getSharedPreferences(SharedPrefKeys.spPrefix, Context.MODE_PRIVATE).edit(),getActivity().getExternalFilesDir(null)).clearFileCache();
+                    return true;
+                }
+            });
+
+            findPreference("clear_cred_prefbutton").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+            {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    new CacheManager(getActivity().getSharedPreferences(SharedPrefKeys.spPrefix, Context.MODE_PRIVATE).edit(),getActivity().getExternalFilesDir(null)).clearCredentials();
+                    return true;
+                }
+            });
             //setHasOptionsMenu(true);
 
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
@@ -206,6 +224,7 @@ public class Settings extends AppCompatPreferenceActivity {
             }
             return super.onOptionsItemSelected(item);
         }
+
     }
 
     /**
