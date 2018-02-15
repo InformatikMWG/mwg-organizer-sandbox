@@ -65,6 +65,21 @@ public class DisplayPDF extends AppCompatActivity {
         mViewPager.setCurrentItem(currentFile);
         mSharedPreferences = getSharedPreferences(SharedPrefKeys.spPrefix, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+            @Override
+            public void onPageSelected(int position) {
+                mEditor.putBoolean(SharedPrefKeys.vplanButtonFileUpdated+position, false);
+                mEditor.commit();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {}
+        });
+
         mEditor.putBoolean(SharedPrefKeys.vplanButtonFileUpdated+currentFile, false);
         mEditor.commit();
     }

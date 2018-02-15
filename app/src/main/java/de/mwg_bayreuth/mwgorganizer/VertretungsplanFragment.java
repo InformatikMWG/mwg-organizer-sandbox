@@ -59,6 +59,12 @@ public class VertretungsplanFragment extends FileSelectionFragment {
         }
     }
 
+    public void onResume()
+    {
+        super.onResume();
+        setupButtons(mContext);
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
