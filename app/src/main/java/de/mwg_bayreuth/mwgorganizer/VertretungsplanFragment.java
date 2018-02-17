@@ -63,6 +63,11 @@ public class VertretungsplanFragment extends FileSelectionFragment {
     {
         super.onResume();
         setupButtons(mContext);
+        mAdapter.setItems(fileSelectionListContent.ITEMS);
+        recyclerView.setAdapter(null);
+        recyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+
     }
 
 

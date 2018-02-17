@@ -1,5 +1,6 @@
 package de.mwg_bayreuth.mwgorganizer;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -8,6 +9,8 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -17,12 +20,15 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.URL;
 
 public class LoginActivity extends AppCompatActivity {
@@ -40,18 +46,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public boolean connectedToInternet() {
+
         ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                 connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
             //we are connected to a network
-            try {
-                InetAddress ipAddr = InetAddress.getByName("www.google.com");
-                //You can replace it with your name
-                return !ipAddr.equals("");
-
-            } catch (Exception e) {
-                return false;
-            }
+            return true;
         }
         else
             return false;

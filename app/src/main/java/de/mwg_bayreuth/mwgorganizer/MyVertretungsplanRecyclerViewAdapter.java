@@ -28,6 +28,10 @@ public class MyVertretungsplanRecyclerViewAdapter extends RecyclerView.Adapter<M
 
     }
 
+    public void setItems(List<FileSelectionListContent.Item> items)
+    {
+        mValues = items;
+    }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
