@@ -41,8 +41,23 @@
 	</body>
 	
 	
-	<hr>
-	<small><b>Letzte Aktualisierung:</b>
-		<?php echo date("d.m.Y, H:i:s",filectime("index.php"));?>
-	</small>
+	
+	
+	
+	<footer>
+		<hr>
+		<small><script type="text/javascript">
+			var updated = new Date(document.lastModified);
+			var date = updated.getDate();
+			var month = updated.getMonth();
+			var year = updated.getFullYear();
+			var hour = updated.getHours();
+			var minute = updated.getMinutes();
+			if (date < 10) date = "0" + date;
+			if (month < 10) month = "0" + month;
+			if (minute < 10) minute = "0" + minute;
+			var updateText="<b>Letzte Aktualisierung:</b> " + date + "." + month + "." + year + ", " + hour + ":" + minute ;
+			document.write(updateText); 
+		</script></small>
+	</footer>
 </html>
