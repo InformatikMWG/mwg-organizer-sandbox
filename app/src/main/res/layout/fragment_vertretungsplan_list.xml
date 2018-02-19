@@ -6,8 +6,7 @@
     android:name="de.mwg_bayreuth.mwgorganizer.VertretungsplanFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:background="#eceff1"
     app:layoutManager="LinearLayoutManager"
     tools:context="de.mwg_bayreuth.mwgorganizer.VertretungsplanFragment"
     tools:listitem="@layout/fragment_vertretungsplan" />

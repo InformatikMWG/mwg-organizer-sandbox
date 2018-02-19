@@ -1,6 +1,5 @@
 package de.mwg_bayreuth.mwgorganizer;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -9,8 +8,6 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -20,15 +17,11 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.net.URL;
 
 public class LoginActivity extends AppCompatActivity {
@@ -197,7 +190,7 @@ public class LoginActivity extends AppCompatActivity {
                 os.close();
 
                 // If the output stream contains this line, the login has failed
-                String aim = "Bitte Loggen Sie sich ein";
+                String doom = "Bitte Loggen Sie sich ein";
 
                 // Don't remove the following line:
                 con.getResponseCode();
@@ -218,7 +211,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
                     while ((inputLine = in.readLine()) != null) {
-                        if (inputLine.contains(aim)) { isValid = false; }
+                        if (inputLine.contains(doom)) { isValid = false; }
 
                         String vertretungsplanHref = ".*menu_Elemente.*ertretungsplan.html.*";
 
@@ -244,7 +237,6 @@ public class LoginActivity extends AppCompatActivity {
         private String getRequestToken(HttpURLConnection con) throws Exception {
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String inputLine;
-            StringBuffer response = new StringBuffer();
             String requestToken = "";
             while ((inputLine = in.readLine()) != null) {
                 if (inputLine.contains("REQUEST_TOKEN")) {

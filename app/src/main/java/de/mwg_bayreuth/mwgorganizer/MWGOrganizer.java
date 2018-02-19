@@ -117,24 +117,26 @@ implements NavigationView.OnNavigationItemSelectedListener,
                 currentFSF = null;
                 fab.setVisibility(View.GONE);
                 exchangeFragment(fragmentClass);
+                setTitle(item.getTitle());
                 break;
             case R.id.nav_vplan:
                 fragmentClass = VertretungsplanFragment.class;
                 currentFSF = FSFEnum.VplanFrag;
                 fab.setVisibility(View.VISIBLE);
                 exchangeFragment(fragmentClass);
+                setTitle(item.getTitle());
                 break;
-            //    case R.id.nav_mensa:
+            //case R.id.nav_mensa:
+                //setTitle(item.getTitle());
 
-            //    case R.id.nav_news:
+            //case R.id.nav_news:
+                //setTitle(item.getTitle());
 
             case R.id.nav_about:
                 startActivity(new Intent(this, About.class)); break;
             case R.id.nav_settings:
                 startActivity(new Intent(this, Settings.class)); break;
         }
-
-        setTitle(item.getTitle());
 
         // Close drawer
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -254,10 +256,6 @@ implements NavigationView.OnNavigationItemSelectedListener,
 
             case R.id.action_settings:
                 startActivity(new Intent(this, Settings.class));
-                return true;
-
-            case R.id.action_dev_shit:
-                startActivity(new Intent(this, DisplayPDF.class));
                 return true;
 
             default:

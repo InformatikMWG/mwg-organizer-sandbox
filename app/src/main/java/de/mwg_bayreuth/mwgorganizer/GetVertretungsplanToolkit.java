@@ -14,11 +14,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.CookieHandler;
 import java.net.CookieManager;
-import java.net.CookieStore;
-import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
 
 
 /**
@@ -176,7 +173,6 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                 if (responseCode == HttpURLConnection.HTTP_OK) { // success
                     BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
                     String inputLine;
-                    StringBuffer response = new StringBuffer();
 
                     while ((inputLine = in.readLine()) != null) {
                         if (inputLine.contains("REQUEST_TOKEN")) {
@@ -186,10 +182,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                     in.close();
                 } else { updatedFiles = -1; Log.e("test", "GET request failed"); }
 
-                CookieStore cookieJar = manager.getCookieStore();
-                List<HttpCookie> cookies = cookieJar.getCookies();
-                String phpsessid = "";
-                for (HttpCookie cookie : cookies) { phpsessid = cookie.toString(); }
+
 
                 // Login
                 URL obj = new URL(post_url);
@@ -374,7 +367,6 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
             if (responseCode == HttpURLConnection.HTTP_OK) { // success
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
                 String inputLine;
-                StringBuffer response = new StringBuffer();
 
                 while ((inputLine = in.readLine()) != null) {
                     if (inputLine.contains("REQUEST_TOKEN")) {
@@ -385,10 +377,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                 in.close();
             } else { updatedFiles = -1; Log.e("test", "GET request not worked"); }
 
-            CookieStore cookieJar = manager.getCookieStore();
-            List<HttpCookie> cookies = cookieJar.getCookies();
-            String phpsessid = "";
-            for (HttpCookie cookie : cookies) { phpsessid = cookie.toString(); }
+
 
             URL obj = new URL(post_url);
             con = (HttpURLConnection) obj.openConnection();
@@ -429,7 +418,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                     root.updateFilename(filelabel);
                     dialog.setProgress(0);
                     dialog.setMax(lengthOfFile);
-                    dialog.setProgressNumberFormat((updatedFiles + 1) + " / " + foundfilescount);
+                    dialog.setProgressNumberFormat((updatedFiles + 1) + "/" + foundfilescount);
 
 
                     FileOutputStream fos = new FileOutputStream(new File(filedir + "/" + filename));
@@ -455,6 +444,3 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
         } catch (Exception e) { updatedFiles = -1; e.printStackTrace(); }
     }
 }
-
-
-

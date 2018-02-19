@@ -13,10 +13,4 @@
         android:orderInCategory="100"
         android:title="@string/settings.header"
         app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_dev_shit"
-        android:orderInCategory="100"
-        android:title="THIS IS YOUR DOOM!! :D"
-        app:showAsAction="never" />
 </menu>

@@ -24,8 +24,10 @@ import android.widget.TextView;
 import java.io.File;
 
 import com.github.barteksc.pdfviewer.PDFView;
+import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 
 public class DisplayPDF extends AppCompatActivity {
+    String[] filelabels;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -53,11 +55,14 @@ public class DisplayPDF extends AppCompatActivity {
         int numberOfFiles =  intent.getIntExtra("NUMBEROFFILES",0);
         String[] filenames = intent.getStringArrayExtra("PDFFILENAMES");
         String[] labels = intent.getStringArrayExtra("PDFFILELABELS");
+        this.filelabels = labels;
         int currentFile = intent.getIntExtra("CURRENTFILE", 0);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), numberOfFiles, filenames, labels);
+
+        setTitle(filelabels[currentFile]);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -74,6 +79,7 @@ public class DisplayPDF extends AppCompatActivity {
             public void onPageSelected(int position) {
                 mEditor.putBoolean(SharedPrefKeys.vplanButtonFileUpdated+position, false);
                 mEditor.commit();
+                setTitle(filelabels[position]);
             }
 
             @Override
@@ -113,6 +119,7 @@ public class DisplayPDF extends AppCompatActivity {
      */
     public static class PlaceholderFragment extends Fragment {
         String filename;
+        String filelabel;
         /**
          * The fragment argument representing the section number for this
          * fragment.
@@ -132,6 +139,7 @@ public class DisplayPDF extends AppCompatActivity {
             args.putString(ARG_LABEL, filelabel);
             fragment.setArguments(args);
             fragment.filename = filename;
+            fragment.filelabel = filelabel;
             return fragment;
         }
 
@@ -139,13 +147,11 @@ public class DisplayPDF extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_pdfdisplay, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getArguments().getString(ARG_LABEL));
 
             PDFView pdfview = (PDFView) rootView.findViewById(R.id.pdfView);
 
             File file = new File(filename);
-            try { pdfview.fromFile(file).load(); }
+            try { pdfview.fromFile(file).scrollHandle(new DefaultScrollHandle(getContext())).load(); }
             catch(Exception e) { e.printStackTrace(); }
 
             return rootView;
@@ -174,7 +180,7 @@ public class DisplayPDF extends AppCompatActivity {
             // Return a PlaceholderFragment (defined as a static inner class below).
             String filelabel = filelabels[position];
             String filename = getExternalFilesDir(null) +"/"+ filenames[position];
-            return PlaceholderFragment.newInstance(position + 1, filename,filelabel);
+            return PlaceholderFragment.newInstance(position + 1, filename, filelabel);
         }
 
         @Override

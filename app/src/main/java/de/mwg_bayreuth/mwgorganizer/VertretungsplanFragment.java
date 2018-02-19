@@ -3,7 +3,10 @@ package de.mwg_bayreuth.mwgorganizer;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -117,7 +120,7 @@ public class VertretungsplanFragment extends FileSelectionFragment {
 
                 @Override
                 public void onLongClick(View view, int position) {
-
+                    onClick(view, position);
                 }
 
             }));
