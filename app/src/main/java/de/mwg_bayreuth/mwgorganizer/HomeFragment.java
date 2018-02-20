@@ -11,11 +11,11 @@ import android.view.ViewGroup;
 
 /**
  * The fragment containing the start page of the app
+ * Only "default" fragment methods are implemented
  */
 public class HomeFragment extends Fragment {
-        private OnFragmentInteractionListener mListener;
+    private OnFragmentInteractionListener mListener;
 
-    MWGOrganizer root;
 
     /**
      * Required empty public constructor
@@ -23,9 +23,9 @@ public class HomeFragment extends Fragment {
     public HomeFragment() { }
 
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,17 +35,13 @@ public class HomeFragment extends Fragment {
     }
 
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+        if (context instanceof OnFragmentInteractionListener) { mListener = (OnFragmentInteractionListener) context; }
+        else { throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener"); }
     }
+
 
     @Override
     public void onDetach() {

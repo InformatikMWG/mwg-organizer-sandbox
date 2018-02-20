@@ -30,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     private String username;
     private String password;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,20 +39,15 @@ public class LoginActivity extends AppCompatActivity {
         progDialog.setTitle(getApplicationContext().getResources().getString(R.string.login_checkCred));
     }
 
-    public boolean connectedToInternet() {
 
-        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-            //we are connected to a network
-            return true;
-        }
-        else
-            return false;
-    }
-
+    /**
+     * Trigger a credentials check when pressing the "LOGIN" button
+     */
     public void login(View view) {
-        if(!connectedToInternet()) {
+        // Check whether network connection to homepage is available
+        NetworkToolkit nettoolkit = new NetworkToolkit(this);
+        if(!nettoolkit.networkConnectionAvailable()) {
+            // No connection to homepage available
             String noconnectionmssg = getApplicationContext().getResources().getString(R.string.general_nointernetconnection);
 
             // Build a "no connection" dialog
@@ -73,15 +69,21 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        // Network connection available: get username & password from text boxes & check credentials
         EditText un = (EditText) findViewById(R.id.InputUsername);
         EditText pw = (EditText) findViewById(R.id.InputPW);
         username = un.getText().toString();
         password = pw.getText().toString();
-
         CheckCredentialsTask checkCredTask = new CheckCredentialsTask(this);
         checkCredTask.execute(username, password);
     }
 
+
+    /**
+     * Save correct credentials to the Shared Preferences
+     * @param username - the correct username
+     * @param password - the correct password
+     */
     public void saveLoginData(String username, String password) {
         SharedPreferences sharedPref = getSharedPreferences(SharedPrefKeys.spPrefix, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -92,6 +94,10 @@ public class LoginActivity extends AppCompatActivity {
         finish(); // Close the activity
     }
 
+
+    /**
+     * Hide or show the plain letters of the password when switching the state of the checkbox
+     */
     public void showLetters(View view) {
         boolean checked = ((CheckBox) view).isChecked();
         EditText pw = (EditText) findViewById(R.id.InputPW);
@@ -108,6 +114,10 @@ public class LoginActivity extends AppCompatActivity {
         pw.setSelection(selectionStart, selectionEnd);
     }
 
+
+    /**
+     * An AsyncTask for checking the credentials
+     */
     private class CheckCredentialsTask extends AsyncTask<String, Void, Boolean> {
         private static final String get_url = "https://www.mwg-bayreuth.de/Login.html";
         private static final String post_url = "https://www.mwg-bayreuth.de/Login.html";
