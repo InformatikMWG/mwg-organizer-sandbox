@@ -114,6 +114,7 @@
     <string name="pref_title_vibrate">Vibrate</string>
     <!-- Sort strings below in a proper order in the groups on top of the file-->
     <string name="app_copyright" translatable="false">&#169; 2017-18 MWG Bayreuth</string>
+    <string name="general.lastUpdate">Zuletzt aktualisiert:</string>
 
 
 </resources>

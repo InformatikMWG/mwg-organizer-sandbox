@@ -126,7 +126,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
         /**
          * Download the HTML file, parse it and trigger fetchPDF
          * @param params - some parameters
-         * @return 13, when update failed; otherwise, any other value
+         * @return 13, when update failed; 42, when update has been performed recently; otherwise, any other value
          */
         @Override
         protected Integer doInBackground(Void... params) {
@@ -156,7 +156,8 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                 speditor.commit();
 
                 // Don't update when last update less than 20 min ago and update wasn't forced
-                if((timeSinceLastUpdate < 20 * 60 * 1000) && !forceUpdate) { return res; }
+                // Have fun finding the relation between 42 and 237 :D
+                if((timeSinceLastUpdate < 20 * 60 * 1000) && !forceUpdate) { updatedFiles = 237; return 42; }
 
                 // Preparation for login: Create a cookie manager
                 CookieManager manager = new CookieManager();

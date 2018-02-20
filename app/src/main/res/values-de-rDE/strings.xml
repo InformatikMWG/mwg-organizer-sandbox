@@ -53,6 +53,7 @@
 
     <string name="settings.header">Einstellungen</string>
     <string name="settings.cache">Cache-Verwaltung</string>
+    <string name="general.lastUpdate">"Zuletzt aktualisiert: "</string>
 
 
     <!-- Sort strings below in a proper order in the groups on top of the file-->

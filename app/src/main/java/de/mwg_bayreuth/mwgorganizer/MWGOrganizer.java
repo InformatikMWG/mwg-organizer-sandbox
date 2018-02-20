@@ -17,6 +17,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 
@@ -105,6 +108,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
         Class fragmentClass = null;
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        TextView lastUpdateLabel = (TextView) findViewById(R.id.lastUpdateLabel);
 
         // Handle navigation view item clicks here.
         switch(item.getItemId()) {
@@ -112,6 +116,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
                 fragmentClass = HomeFragment.class;
                 currentFSF = null;
                 fab.setVisibility(View.GONE);
+                lastUpdateLabel.setVisibility(View.GONE);
                 exchangeFragment(fragmentClass);
                 setTitle(getApplicationContext().getResources().getString(R.string.app_name));
                 break;
@@ -119,6 +124,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
                 fragmentClass = VertretungsplanFragment.class;
                 currentFSF = FSFEnum.VplanFrag;
                 fab.setVisibility(View.VISIBLE);
+                lastUpdateLabel.setVisibility(View.VISIBLE);
                 exchangeFragment(fragmentClass);
                 updateFiles(false);
                 setTitle(item.getTitle());
@@ -206,7 +212,8 @@ implements NavigationView.OnNavigationItemSelectedListener,
             snackbarString = getApplicationContext().getResources().getString(R.string.progress_updatefail);
         }
 
-        Snackbar.make(view, snackbarString, Snackbar.LENGTH_SHORT).show();
+        // Don't show snackbar if update has been performed too recently & has not been forced
+        if(updatedFiles != 237) { Snackbar.make(view, snackbarString, Snackbar.LENGTH_SHORT).show(); }
     }
 
 
