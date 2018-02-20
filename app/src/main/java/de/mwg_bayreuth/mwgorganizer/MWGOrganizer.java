@@ -1,5 +1,6 @@
 package de.mwg_bayreuth.mwgorganizer;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -19,9 +20,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.io.File;
+import java.text.SimpleDateFormat;
 
 public class MWGOrganizer extends AppCompatActivity
 implements NavigationView.OnNavigationItemSelectedListener,
@@ -34,7 +34,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
     ProgressDialog progDialog;
     SharedPreferences sharedPref;
     SharedPreferences.Editor speditor;
-    FSFEnum currentFSF;
+    MainFrags currentFrag;
     FileSelectionFragment fileSelectionFragment;
     Menu drawerMenu;
 
@@ -72,7 +72,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            if(currentFSF != null) { MWGOrganizer.this.updateFiles(true); }
+            if(currentFrag != null) { MWGOrganizer.this.updateFiles(true); }
             }
         });
 
@@ -114,7 +114,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
         switch(item.getItemId()) {
             default:
                 fragmentClass = HomeFragment.class;
-                currentFSF = null;
+                currentFrag = null;
                 fab.setVisibility(View.GONE);
                 lastUpdateLabel.setVisibility(View.GONE);
                 exchangeFragment(fragmentClass);
@@ -122,7 +122,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
                 break;
             case R.id.nav_vplan:
                 fragmentClass = VertretungsplanFragment.class;
-                currentFSF = FSFEnum.VplanFrag;
+                currentFrag = MainFrags.VplanFrag;
                 fab.setVisibility(View.VISIBLE);
                 lastUpdateLabel.setVisibility(View.VISIBLE);
                 exchangeFragment(fragmentClass);
@@ -153,7 +153,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
         android.support.v4.app.Fragment fragment = null;
         try {
             fragment = (android.support.v4.app.Fragment) fragmentClass.newInstance();
-            if(currentFSF == FSFEnum.VplanFrag) {
+            if(currentFrag == MainFrags.VplanFrag) {
                 fileSelectionFragment = (FileSelectionFragment) fragment;
             }
         } catch (Exception e) { e.printStackTrace(); }
@@ -164,12 +164,6 @@ implements NavigationView.OnNavigationItemSelectedListener,
     }
 
 
-
-
-
-
-
-
     public void updateFiles(boolean forceUpdate) {
         // Check for internet connection
         NetworkToolkit nettools = new NetworkToolkit(MWGOrganizer.this);
@@ -177,16 +171,16 @@ implements NavigationView.OnNavigationItemSelectedListener,
             // No internet connection: Complain
             Snackbar.make(getWindow().getDecorView().getRootView(), R.string.general_nointernetconnection, Snackbar.LENGTH_SHORT).show();
         } else {
-            if (currentFSF == FSFEnum.VplanFrag) {
+            if (currentFrag == MainFrags.VplanFrag) {
                 if (forceUpdate) {
                     speditor.putBoolean(SharedPrefKeys.vplanForceUpdate, true);
                     speditor.commit();
                 }
                 GetVertretungsplanToolkit gvt = new GetVertretungsplanToolkit(
                         sharedPref, speditor, cachemanager, progDialog, extDirectory, this);
-            } else if (currentFSF == FSFEnum.MplanFrag) {
+            } else if (currentFrag == MainFrags.MplanFrag) {
 
-            } else if (currentFSF == FSFEnum.NewsFrag) {
+            } else if (currentFrag == MainFrags.NewsFrag) {
 
             }
         }
@@ -218,17 +212,19 @@ implements NavigationView.OnNavigationItemSelectedListener,
 
 
     public void initButtons() {
-        if(currentFSF == FSFEnum.VplanFrag)
+        if(currentFrag == MainFrags.VplanFrag)
             { fileSelectionFragment.setupButtons(getApplicationContext()); }
     }
 
     public void setupButtons() {
-        // Uses a dirty, but working hack :D
-        if(currentFSF == FSFEnum.VplanFrag) { exchangeFragment(VertretungsplanFragment.class); }
+        // Uses a dirty, but working »hack« :D
+        if(currentFrag == MainFrags.VplanFrag) { exchangeFragment(VertretungsplanFragment.class); }
     }
 
 
-
+    /**
+     * Methods for exchanging fragments from buttons in the »Home« fragment
+     */
     public void openVertplaene(View view) {
         onNavigationItemSelected(drawerMenu.findItem(R.id.nav_vplan));
         drawerMenu.findItem(R.id.nav_vplan).setChecked(true);
@@ -242,12 +238,35 @@ implements NavigationView.OnNavigationItemSelectedListener,
         drawerMenu.findItem(R.id.nav_news).setChecked(true);
     }
 
+
+    /**
+     * Open the Login Activity when a GetFileToolkit asks to do so
+     */
     public void openLogin() { startActivity(new Intent(this, LoginActivity.class)); }
 
 
+    /**
+     * Update the time displayed in the "Last Update: ..."-label
+     */
+    @SuppressLint({"SimpleDateFormat", "SetTextI18n"})
+    public void setLastUpdateTimeLabel() {
+        TextView lastUpdateLabel = (TextView) findViewById(R.id.lastUpdateLabel);
+        Long lastUpdate;
 
-    public void setLastUpdateTimeLabel() {}
+        switch(currentFrag) {
+            case VplanFrag: lastUpdate = sharedPref.getLong(SharedPrefKeys.vplanLastUpdate, 0); break;
+            case MplanFrag: lastUpdate = sharedPref.getLong(SharedPrefKeys.mensaLastUpdate, 0); break;
+            case NewsFrag:  lastUpdate = sharedPref.getLong(SharedPrefKeys.newsLastUpdate,  0); break;
+            default:        lastUpdate = 0L; break;
+        }
 
+        String lastupdatecaption = getApplicationContext().getResources().getString(R.string.general_lastUpdate);
+        String nointconncaption  = getApplicationContext().getResources().getString(R.string.general_nointernetconnection);
+
+        String timeStamp = new SimpleDateFormat().format(new java.util.Date(lastUpdate));
+        if(lastUpdate != 0) { lastUpdateLabel.setText(lastupdatecaption + timeStamp); }
+        else                { lastUpdateLabel.setText(nointconncaption); }
+    }
 
     
     @Override
@@ -292,7 +311,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
 
 
 
-    // Has to be overridden, otherwise nasty crashes occurr
+    // Has to be overridden, otherwise nasty crashes occur
     @Override
     public void onFragmentInteraction(Uri uri) {}
 
@@ -300,5 +319,5 @@ implements NavigationView.OnNavigationItemSelectedListener,
     public void onListFragmentInteraction(FileSelectionListContent.Item item) {}
 
 
-    private enum FSFEnum { VplanFrag, MplanFrag, NewsFrag }
+    private enum MainFrags { VplanFrag, MplanFrag, NewsFrag }
 }
