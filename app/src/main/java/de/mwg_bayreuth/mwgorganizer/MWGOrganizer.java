@@ -33,6 +33,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
     SharedPreferences.Editor speditor;
     FSFEnum currentFSF;
     FileSelectionFragment fileSelectionFragment;
+    Menu drawerMenu;
 
 
 
@@ -87,6 +88,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        drawerMenu = navigationView.getMenu();
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
 
@@ -117,7 +119,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
                 currentFSF = null;
                 fab.setVisibility(View.GONE);
                 exchangeFragment(fragmentClass);
-                setTitle(item.getTitle());
+                setTitle(getApplicationContext().getResources().getString(R.string.app_name));
                 break;
             case R.id.nav_vplan:
                 fragmentClass = VertretungsplanFragment.class;
@@ -152,7 +154,6 @@ implements NavigationView.OnNavigationItemSelectedListener,
             fragment = (android.support.v4.app.Fragment) fragmentClass.newInstance();
             if(currentFSF == FSFEnum.VplanFrag) {
                 fileSelectionFragment = (FileSelectionFragment) fragment;
-
             }
         } catch (Exception e) { e.printStackTrace(); }
 
@@ -217,7 +218,23 @@ implements NavigationView.OnNavigationItemSelectedListener,
     }
 
 
+
+    public void openVertplaene(View view) {
+        onNavigationItemSelected(drawerMenu.findItem(R.id.nav_vplan));
+        drawerMenu.findItem(R.id.nav_vplan).setChecked(true);
+    }
+    public void openMensa(View view) {
+        onNavigationItemSelected(drawerMenu.findItem(R.id.nav_mensa));
+        drawerMenu.findItem(R.id.nav_mensa).setChecked(true);
+    }
+    public void openNews(View view) {
+        onNavigationItemSelected(drawerMenu.findItem(R.id.nav_news));
+        drawerMenu.findItem(R.id.nav_news).setChecked(true);
+    }
+
     public void openLogin() { startActivity(new Intent(this, LoginActivity.class)); }
+
+
 
     public void setLastUpdateTimeLabel() {}
 

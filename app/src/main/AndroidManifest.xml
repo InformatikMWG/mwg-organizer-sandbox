@@ -13,29 +13,39 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".MWGOrganizer"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".Settings"
             android:label="@string/settings.header"
-            android:parentActivityName=".MWGOrganizer" />
+            android:parentActivityName=".MWGOrganizer"
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".About"
             android:label="@string/about.header"
-            android:parentActivityName=".MWGOrganizer" />
+            android:parentActivityName=".MWGOrganizer"
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".DisplayPDF"
-            android:label="@string/title_activity_display_pdf"
-            android:parentActivityName=".MWGOrganizer" />
-        <activity android:name=".LoginActivity"></activity>
+            android:label="@string/displayPDF.header"
+            android:parentActivityName=".MWGOrganizer"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".LoginActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

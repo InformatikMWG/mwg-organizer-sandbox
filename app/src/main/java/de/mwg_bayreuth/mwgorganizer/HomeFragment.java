@@ -10,35 +10,22 @@ import android.view.ViewGroup;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link HomeFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * The fragment containing the start page of the app
  */
 public class HomeFragment extends Fragment {
         private OnFragmentInteractionListener mListener;
 
-    public HomeFragment() {
-        // Required empty public constructor
-    }
+    MWGOrganizer root;
+
+    /**
+     * Required empty public constructor
+     */
+    public HomeFragment() { }
 
 
-    // TODO: Rename and change types and number of parameters
-    //public static HomeFragment newInstance() {
-    //    HomeFragment fragment = new HomeFragment();
-    //    return fragment;
-    //}
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //if (getArguments() != null) {
-        //    mParam1 = getArguments().getString(ARG_PARAM1);
-        //    mParam2 = getArguments().getString(ARG_PARAM2);
-        //}
-    }
+    public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,12 +34,7 @@ public class HomeFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
+
 
     @Override
     public void onAttach(Context context) {
@@ -71,6 +53,7 @@ public class HomeFragment extends Fragment {
         mListener = null;
     }
 
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -82,7 +65,6 @@ public class HomeFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }

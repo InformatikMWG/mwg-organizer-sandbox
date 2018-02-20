@@ -3,7 +3,9 @@ package de.mwg_bayreuth.mwgorganizer;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class About extends AppCompatActivity {
 
@@ -11,6 +13,9 @@ public class About extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
+
+        TextView authorList = (TextView) findViewById(R.id.authorList);
+        authorList.setText(Html.fromHtml(getString(R.string.about_authors_text)));
     }
 
     @Override
