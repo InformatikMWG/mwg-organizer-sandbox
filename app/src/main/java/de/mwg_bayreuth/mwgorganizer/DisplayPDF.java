@@ -3,10 +3,7 @@ package de.mwg_bayreuth.mwgorganizer;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,32 +16,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.TextView;
-
 import java.io.File;
 
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 
+
+
 public class DisplayPDF extends AppCompatActivity {
     String[] filelabels;
+    private SharedPreferences.Editor speditor;
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
-    private ViewPager mViewPager;
-    private SharedPreferences mSharedPreferences;
-    private SharedPreferences.Editor mEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,16 +42,16 @@ public class DisplayPDF extends AppCompatActivity {
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), numberOfFiles, filenames, labels);
+        PDFViewPagerAdapter pagerAdapt = new PDFViewPagerAdapter(getSupportFragmentManager(), numberOfFiles, filenames, labels);
 
         setTitle(filelabels[currentFile]);
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(pagerAdapt);
         mViewPager.setCurrentItem(currentFile);
-        mSharedPreferences = getSharedPreferences(SharedPrefKeys.spPrefix, Context.MODE_PRIVATE);
-        mEditor = mSharedPreferences.edit();
+        SharedPreferences sharedPref = getSharedPreferences(SharedPrefKeys.spPrefix, Context.MODE_PRIVATE);
+        speditor = sharedPref.edit();
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -77,8 +59,8 @@ public class DisplayPDF extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                mEditor.putBoolean(SharedPrefKeys.vplanButtonFileUpdated+position, false);
-                mEditor.commit();
+                speditor.putBoolean(SharedPrefKeys.vplanButtonFileUpdated+position, false);
+                speditor.commit();
                 setTitle(filelabels[position]);
             }
 
@@ -86,8 +68,8 @@ public class DisplayPDF extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {}
         });
 
-        mEditor.putBoolean(SharedPrefKeys.vplanButtonFileUpdated+currentFile, false);
-        mEditor.commit();
+        speditor.putBoolean(SharedPrefKeys.vplanButtonFileUpdated+currentFile, false);
+        speditor.commit();
     }
 
 
@@ -98,10 +80,13 @@ public class DisplayPDF extends AppCompatActivity {
         return true;
     }
 
+    
+    /**
+     * Handle action bar item clicks here. The action bar handles clicks 
+     * on the Home/Up button the same as clicks on the physical "back" button
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar handles clicks
-        // on the Home/Up button the same as clicks on the physical "back" button
         switch(item.getItemId()) {
             case android.R.id.home:
                 onBackPressed(); return true;
@@ -114,35 +99,30 @@ public class DisplayPDF extends AppCompatActivity {
         }
     }
 
+    
     /**
-     * A placeholder fragment containing a simple view.
+     * A fragment containing a PDFView with a document
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class PDFFileFragment extends Fragment {
         String filename;
         String filelabel;
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_LABEL = "LABEL";
 
-        public PlaceholderFragment() {
-        }
+        public PDFFileFragment() { }
 
         /**
-         * Returns a new instance of this fragment for the given section
-         * number.
+         * Returns a new instance of this fragment for the given filename and -label
          */
-        public static PlaceholderFragment newInstance(int sectionNumber, String filename, String filelabel) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
+        public static PDFFileFragment newInstance(String filename, String filelabel) {
+            PDFFileFragment fragment = new PDFFileFragment();
             Bundle args = new Bundle();
-            args.putString(ARG_LABEL, filelabel);
+            args.putString("LABEL", filelabel);
             fragment.setArguments(args);
             fragment.filename = filename;
             fragment.filelabel = filelabel;
             return fragment;
         }
 
+        
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
@@ -152,22 +132,27 @@ public class DisplayPDF extends AppCompatActivity {
 
             File file = new File(filename);
             try { pdfview.fromFile(file).scrollHandle(new DefaultScrollHandle(getContext())).load(); }
-            catch(Exception e) { e.printStackTrace(); }
+            catch(Exception e) {
+                // File not found or f***ed up
+                // TODO: File should be downloaded again
+                e.printStackTrace();
+            }
 
             return rootView;
         }
     }
 
+    
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public class PDFViewPagerAdapter extends FragmentPagerAdapter {
         private int numberOfFiles;
         private String[] filenames;
         private String[] filelabels;
 
-        public SectionsPagerAdapter(FragmentManager fm, int numberOfFiles, String[] filenames, String[] filelabels) {
+        PDFViewPagerAdapter(FragmentManager fm, int numberOfFiles, String[] filenames, String[] filelabels) {
             super(fm);
             this.numberOfFiles = numberOfFiles;
             this.filenames = filenames;
@@ -177,10 +162,10 @@ public class DisplayPDF extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
+            // Return a PDFFileFragment (defined as a static inner class below).
             String filelabel = filelabels[position];
             String filename = getExternalFilesDir(null) +"/"+ filenames[position];
-            return PlaceholderFragment.newInstance(position + 1, filename, filelabel);
+            return PDFFileFragment.newInstance(filename, filelabel);
         }
 
         @Override

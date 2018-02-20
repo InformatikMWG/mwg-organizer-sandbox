@@ -69,13 +69,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(currentFSF != null) {
-                    // TODO: Check whether Connection to Homepage is possible
-                    if(false) {
-                        // No internet connection: Complain
-                        Snackbar.make(view, R.string.general_nointernetconnection, Snackbar.LENGTH_SHORT).show();
-                    } else { MWGOrganizer.this.updateFiles(); }
-                }
+            if(currentFSF != null) { MWGOrganizer.this.updateFiles(true); }
             }
         });
 
@@ -126,6 +120,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
                 currentFSF = FSFEnum.VplanFrag;
                 fab.setVisibility(View.VISIBLE);
                 exchangeFragment(fragmentClass);
+                updateFiles(false);
                 setTitle(item.getTitle());
                 break;
             //case R.id.nav_mensa:
@@ -169,17 +164,25 @@ implements NavigationView.OnNavigationItemSelectedListener,
 
 
 
-    public void updateFiles() {
-        // Checking for internet connection is done in the FAB listener
-        if(currentFSF == FSFEnum.VplanFrag) {
-            speditor.putBoolean(SharedPrefKeys.vplanForceUpdate, true);
-            speditor.commit();
-            GetVertretungsplanToolkit gvt = new GetVertretungsplanToolkit(
-                    sharedPref, speditor, cachemanager, progDialog, extDirectory, this);
-        } else if (currentFSF == FSFEnum.MplanFrag) {
+    public void updateFiles(boolean forceUpdate) {
+        // Check for internet connection
+        NetworkToolkit nettools = new NetworkToolkit(MWGOrganizer.this);
+        if(!nettools.networkConnectionAvailable()) {
+            // No internet connection: Complain
+            Snackbar.make(getWindow().getDecorView().getRootView(), R.string.general_nointernetconnection, Snackbar.LENGTH_SHORT).show();
+        } else {
+            if (currentFSF == FSFEnum.VplanFrag) {
+                if (forceUpdate) {
+                    speditor.putBoolean(SharedPrefKeys.vplanForceUpdate, true);
+                    speditor.commit();
+                }
+                GetVertretungsplanToolkit gvt = new GetVertretungsplanToolkit(
+                        sharedPref, speditor, cachemanager, progDialog, extDirectory, this);
+            } else if (currentFSF == FSFEnum.MplanFrag) {
 
-        } else if (currentFSF == FSFEnum.NewsFrag) {
+            } else if (currentFSF == FSFEnum.NewsFrag) {
 
+            }
         }
     }
 
