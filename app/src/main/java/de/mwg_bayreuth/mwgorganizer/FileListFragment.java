@@ -3,10 +3,7 @@ package de.mwg_bayreuth.mwgorganizer;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,7 +19,7 @@ import android.view.ViewGroup;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class VertretungsplanFragment extends FileSelectionFragment {
+public class FileListFragment extends FileSelectionFragment {
     // TODO: Customize parameter argument names
     private static final String ARG_TYP = "TYPOFCLASS";
     // TODO: Customize parameters
@@ -32,22 +29,22 @@ public class VertretungsplanFragment extends FileSelectionFragment {
     private RecyclerView recyclerView = null;
     private FileSelectionListContent fileSelectionListContent = null;
     private OnListFragmentInteractionListener mListener;
-    private MyVertretungsplanRecyclerViewAdapter mAdapter;
+    private FileListFragmentRecyclerViewAdapter mAdapter;
     private SharedPreferences sharedPref;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public VertretungsplanFragment() {
+    public FileListFragment() {
         super();
         fileSelectionListContent = new FileSelectionListContent();
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static VertretungsplanFragment newInstance(String Typ) {
-        VertretungsplanFragment fragment = new VertretungsplanFragment();
+    public static FileListFragment newInstance(String Typ) {
+        FileListFragment fragment = new FileListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_TYP, Typ);
         fragment.setArguments(args);
@@ -78,7 +75,7 @@ public class VertretungsplanFragment extends FileSelectionFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_vertretungsplan_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_filelist, container, false);
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -88,7 +85,7 @@ public class VertretungsplanFragment extends FileSelectionFragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            mAdapter = new MyVertretungsplanRecyclerViewAdapter(fileSelectionListContent.ITEMS, mListener);
+            mAdapter = new FileListFragmentRecyclerViewAdapter(fileSelectionListContent.ITEMS, mListener);
             recyclerView.setAdapter(mAdapter);
             recyclerView.addOnItemTouchListener(new RecyclerTouchListener(mContext,
                     recyclerView, new ClickListener() {
@@ -180,11 +177,6 @@ public class VertretungsplanFragment extends FileSelectionFragment {
                     sharedPref.getString(SharedPrefKeys.spPrefix + Typ + ".buttons.filename"+i, "NULL"),
                     sharedPref.getBoolean(SharedPrefKeys.spPrefix + Typ + ".buttons.fileupdated"+i, false)));
         }
-    }
-
-    @Override
-    void setLastUpdateTimeLabel() {
-
     }
 
 

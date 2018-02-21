@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import de.mwg_bayreuth.mwgorganizer.VertretungsplanFragment.OnListFragmentInteractionListener;
+import de.mwg_bayreuth.mwgorganizer.FileListFragment.OnListFragmentInteractionListener;
 
 import java.util.List;
 
@@ -16,13 +16,13 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  *
  */
-public class MyVertretungsplanRecyclerViewAdapter extends RecyclerView.Adapter<MyVertretungsplanRecyclerViewAdapter.ViewHolder> {
+public class FileListFragmentRecyclerViewAdapter extends RecyclerView.Adapter<FileListFragmentRecyclerViewAdapter.ViewHolder> {
 
     private List<FileSelectionListContent.Item> mValues;
     private ViewHolder mViewHolder;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyVertretungsplanRecyclerViewAdapter(List<FileSelectionListContent.Item> items, OnListFragmentInteractionListener listener) {
+    public FileListFragmentRecyclerViewAdapter(List<FileSelectionListContent.Item> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
 
@@ -35,7 +35,7 @@ public class MyVertretungsplanRecyclerViewAdapter extends RecyclerView.Adapter<M
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_vertretungsplan, parent, false);
+                .inflate(R.layout.fragment_filelist_item, parent, false);
         return new ViewHolder(view);
     }
 

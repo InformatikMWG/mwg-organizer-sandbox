@@ -9,5 +9,5 @@
     android:layout_marginBottom="36dp"
     android:background="#eceff1"
     app:layoutManager="LinearLayoutManager"
-    tools:context="de.mwg_bayreuth.mwgorganizer.VertretungsplanFragment"
-    tools:listitem="@layout/fragment_vertretungsplan" />
+    tools:context="de.mwg_bayreuth.mwgorganizer.FileListFragment"
+    tools:listitem="@layout/fragment_filelist_item" />

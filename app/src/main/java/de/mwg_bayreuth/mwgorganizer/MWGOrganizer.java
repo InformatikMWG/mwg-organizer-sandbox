@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -28,7 +27,7 @@ public class MWGOrganizer extends AppCompatActivity
 implements NavigationView.OnNavigationItemSelectedListener,
         // Also implement the interaction listeners of the single fragments
         HomeFragment.OnFragmentInteractionListener,
-        VertretungsplanFragment.OnListFragmentInteractionListener {
+        FileListFragment.OnListFragmentInteractionListener {
 
     CacheManager cachemanager;
     File extDirectory;
@@ -122,7 +121,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
                 setTitle(getApplicationContext().getResources().getString(R.string.app_name));
                 break;
             case R.id.nav_vplan:
-                fragmentClass = VertretungsplanFragment.class;
+                fragmentClass = FileListFragment.class;
                 currentFrag = MainFrags.VplanFrag;
                 fab.setVisibility(View.VISIBLE);
                 lastUpdateLabel.setVisibility(View.VISIBLE);
@@ -131,7 +130,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
                 setTitle(item.getTitle());
                 break;
             case R.id.nav_mensa:
-                fragmentClass = VertretungsplanFragment.class;
+                fragmentClass = FileListFragment.class;
                 currentFrag = MainFrags.MplanFrag;
                 fab.setVisibility(View.VISIBLE);
                 lastUpdateLabel.setVisibility(View.VISIBLE);
@@ -160,25 +159,24 @@ implements NavigationView.OnNavigationItemSelectedListener,
     private void exchangeFragment(Class fragmentClass) {
         android.support.v4.app.Fragment fragment = null;
         try {
-            if(currentFrag == MainFrags.VplanFrag) {
-                fragment = VertretungsplanFragment.newInstance(".vertplan");
-                fileSelectionFragment = (FileSelectionFragment) fragment;
-            }else
-                {
-                    if(currentFrag == MainFrags.MplanFrag)
-                    {
-                        fragment = VertretungsplanFragment.newInstance(".mensa");
-                        fileSelectionFragment = (FileSelectionFragment) fragment;
-                    }
-                    else
-                        {
-                            fragment = (android.support.v4.app.Fragment) fragmentClass.newInstance();
-                        }
-                }
+            switch(currentFrag) {
+                case VplanFrag:
+                    fragment = FileListFragment.newInstance(".vertplan");
+                    fileSelectionFragment = (FileSelectionFragment) fragment;
+                    break;
+
+                case MplanFrag:
+                    fragment = FileListFragment.newInstance(".mensa");
+                    fileSelectionFragment = (FileSelectionFragment) fragment;
+                    break;
+
+                default:
+                    fragment = (android.support.v4.app.Fragment) fragmentClass.newInstance();
+                    break;
+            }
         } catch (Exception e) { e.printStackTrace(); }
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
         initButtons();
     }
 
@@ -190,20 +188,34 @@ implements NavigationView.OnNavigationItemSelectedListener,
             // No internet connection: Complain
             Snackbar.make(getWindow().getDecorView().getRootView(), R.string.general_nointernetconnection, Snackbar.LENGTH_SHORT).show();
         } else {
-            if (currentFrag == MainFrags.VplanFrag) {
-                if (forceUpdate) {
-                    speditor.putBoolean(SharedPrefKeys.vplanForceUpdate, true);
-                    speditor.commit();
+            // set the forceUpdateFlag if necessary
+            if(forceUpdate) {
+                switch (currentFrag) {
+                    case VplanFrag: speditor.putBoolean(SharedPrefKeys.vplanForceUpdate, true); break;
+                    case MplanFrag: speditor.putBoolean(SharedPrefKeys.mensaForceUpdate, true); break;
+                    case NewsFrag:  speditor.putBoolean(SharedPrefKeys.newsForceUpdate,  true); break;
+                    default: break;
                 }
-                GetVertretungsplanToolkit gvt = new GetVertretungsplanToolkit(
-                        sharedPref, speditor, cachemanager, progDialog, extDirectory, this);
-            } else if (currentFrag == MainFrags.MplanFrag) {
+                speditor.commit();
+            }
 
-            } else if (currentFrag == MainFrags.NewsFrag) {
+            // execute the required getFilesToolkit
+            switch(currentFrag) {
+                case VplanFrag:
+                    new GetVertretungsplanToolkit(sharedPref, speditor, cachemanager, progDialog, extDirectory, this);
+                    break;
 
+                case MplanFrag:
+                    // TODO: Create and execute a getMensaplanToolkit
+
+                case NewsFrag:
+                    // TODO: Create and execute a getNewsToolkit
+
+                default: break;
             }
         }
     }
+
 
 
     public void showUpdateSummary(boolean isNewsUpdate, int updatedFiles) {
@@ -237,7 +249,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
 
     public void setupButtons() {
         // Uses a dirty, but working »hack« :D
-        if(currentFrag == MainFrags.VplanFrag) { exchangeFragment(VertretungsplanFragment.class); }
+        if(currentFrag == MainFrags.VplanFrag) { exchangeFragment(FileListFragment.class); }
     }
 
 
