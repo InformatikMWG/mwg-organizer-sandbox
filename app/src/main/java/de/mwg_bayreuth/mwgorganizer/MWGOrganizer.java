@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -129,8 +130,15 @@ implements NavigationView.OnNavigationItemSelectedListener,
                 updateFiles(false);
                 setTitle(item.getTitle());
                 break;
-            //case R.id.nav_mensa:
-                //setTitle(item.getTitle());
+            case R.id.nav_mensa:
+                fragmentClass = VertretungsplanFragment.class;
+                currentFrag = MainFrags.MplanFrag;
+                fab.setVisibility(View.VISIBLE);
+                lastUpdateLabel.setVisibility(View.VISIBLE);
+                exchangeFragment(fragmentClass);
+                //updateFiles(false);
+                setTitle(item.getTitle());
+                break;
 
             //case R.id.nav_news:
                 //setTitle(item.getTitle());
@@ -152,10 +160,21 @@ implements NavigationView.OnNavigationItemSelectedListener,
     private void exchangeFragment(Class fragmentClass) {
         android.support.v4.app.Fragment fragment = null;
         try {
-            fragment = (android.support.v4.app.Fragment) fragmentClass.newInstance();
             if(currentFrag == MainFrags.VplanFrag) {
+                fragment = VertretungsplanFragment.newInstance(".vertplan");
                 fileSelectionFragment = (FileSelectionFragment) fragment;
-            }
+            }else
+                {
+                    if(currentFrag == MainFrags.MplanFrag)
+                    {
+                        fragment = VertretungsplanFragment.newInstance(".mensa");
+                        fileSelectionFragment = (FileSelectionFragment) fragment;
+                    }
+                    else
+                        {
+                            fragment = (android.support.v4.app.Fragment) fragmentClass.newInstance();
+                        }
+                }
         } catch (Exception e) { e.printStackTrace(); }
 
         getSupportFragmentManager().beginTransaction()

@@ -24,9 +24,10 @@ import android.view.ViewGroup;
  */
 public class VertretungsplanFragment extends FileSelectionFragment {
     // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
+    private static final String ARG_TYP = "TYPOFCLASS";
     // TODO: Customize parameters
     private int mColumnCount = 1;
+    private String Typ;
     private Context mContext = null;
     private RecyclerView recyclerView = null;
     private FileSelectionListContent fileSelectionListContent = null;
@@ -45,10 +46,10 @@ public class VertretungsplanFragment extends FileSelectionFragment {
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static VertretungsplanFragment newInstance(int columnCount) {
+    public static VertretungsplanFragment newInstance(String Typ) {
         VertretungsplanFragment fragment = new VertretungsplanFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putString(ARG_TYP, Typ);
         fragment.setArguments(args);
         return fragment;
     }
@@ -58,7 +59,7 @@ public class VertretungsplanFragment extends FileSelectionFragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            Typ = getArguments().getString(ARG_TYP);
         }
     }
 
@@ -172,12 +173,12 @@ public class VertretungsplanFragment extends FileSelectionFragment {
     void setupButtons(Context context) {
         fileSelectionListContent = new FileSelectionListContent();
         sharedPref = context.getSharedPreferences(SharedPrefKeys.spPrefix, Context.MODE_PRIVATE);
-        int nrButtons = sharedPref.getInt(SharedPrefKeys.vplanButtonNr,0);
+        int nrButtons = sharedPref.getInt(SharedPrefKeys.spPrefix + Typ + ".buttons.number",0);
         for(int i = 0; i < nrButtons; i++) {
             addItem(new FileSelectionListContent.Item(""+i,
-                    sharedPref.getString(SharedPrefKeys.vplanButtonLabel+i, "NULL"),
-                    sharedPref.getString(SharedPrefKeys.vplanButtonFilename+i, "NULL"),
-                    sharedPref.getBoolean(SharedPrefKeys.vplanButtonFileUpdated+i, false)));
+                    sharedPref.getString(SharedPrefKeys.spPrefix + Typ + ".buttons.label"+i, "NULL"),
+                    sharedPref.getString(SharedPrefKeys.spPrefix + Typ + ".buttons.filename"+i, "NULL"),
+                    sharedPref.getBoolean(SharedPrefKeys.spPrefix + Typ + ".buttons.fileupdated"+i, false)));
         }
     }
 
