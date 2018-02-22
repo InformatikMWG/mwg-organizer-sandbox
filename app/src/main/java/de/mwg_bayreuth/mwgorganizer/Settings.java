@@ -2,8 +2,6 @@ package de.mwg_bayreuth.mwgorganizer;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -13,7 +11,6 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -192,7 +189,7 @@ public class Settings extends AppCompatPreferenceActivity {
             {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    new CacheManager(getActivity().getSharedPreferences(SharedPrefKeys.spPrefix, Context.MODE_PRIVATE).edit(),getActivity().getExternalFilesDir(null)).clearFileCache();
+                    new CacheManager(getActivity().getSharedPreferences(SharedPrefKeys.spRoot, Context.MODE_PRIVATE).edit(),getActivity().getExternalFilesDir(null)).clearFileCache();
                     return true;
                 }
             });
@@ -201,7 +198,7 @@ public class Settings extends AppCompatPreferenceActivity {
             {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    new CacheManager(getActivity().getSharedPreferences(SharedPrefKeys.spPrefix, Context.MODE_PRIVATE).edit(),getActivity().getExternalFilesDir(null)).clearCredentials();
+                    new CacheManager(getActivity().getSharedPreferences(SharedPrefKeys.spRoot, Context.MODE_PRIVATE).edit(),getActivity().getExternalFilesDir(null)).clearCredentials();
                     return true;
                 }
             });

@@ -26,6 +26,7 @@ import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 public class DisplayPDF extends AppCompatActivity {
     String[] filelabels;
     private SharedPreferences.Editor speditor;
+    String fileset;
 
 
     @Override
@@ -34,6 +35,7 @@ public class DisplayPDF extends AppCompatActivity {
         setContentView(R.layout.activity_display_pdf);
 
         Intent intent = getIntent();
+        fileset = intent.getStringExtra("FILESET");
         int numberOfFiles =  intent.getIntExtra("NUMBEROFFILES",0);
         String[] filenames = intent.getStringArrayExtra("PDFFILENAMES");
         String[] labels = intent.getStringArrayExtra("PDFFILELABELS");
@@ -50,7 +52,7 @@ public class DisplayPDF extends AppCompatActivity {
         ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(pagerAdapt);
         mViewPager.setCurrentItem(currentFile);
-        SharedPreferences sharedPref = getSharedPreferences(SharedPrefKeys.spPrefix, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences(SharedPrefKeys.spRoot, Context.MODE_PRIVATE);
         speditor = sharedPref.edit();
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -59,7 +61,11 @@ public class DisplayPDF extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                speditor.putBoolean(SharedPrefKeys.vplanButtonFileUpdated+position, false);
+                switch(fileset) {
+                    case ".vertplan": speditor.putBoolean(SharedPrefKeys.vplanFileUpdated + position, false); break;
+                    case ".mensa":    speditor.putBoolean(SharedPrefKeys.mensaFileUpdated + position, false); break;
+                    default: break;
+                }
                 speditor.commit();
                 setTitle(filelabels[position]);
             }
@@ -68,7 +74,11 @@ public class DisplayPDF extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {}
         });
 
-        speditor.putBoolean(SharedPrefKeys.vplanButtonFileUpdated+currentFile, false);
+        switch(fileset) {
+            case ".vertplan": speditor.putBoolean(SharedPrefKeys.vplanFileUpdated + currentFile, false); break;
+            case ".mensa":    speditor.putBoolean(SharedPrefKeys.mensaFileUpdated + currentFile, false); break;
+            default: break;
+        }
         speditor.commit();
     }
 

@@ -8,8 +8,8 @@ import java.util.Map;
 import de.mwg_bayreuth.mwgorganizer.DisplayPDF;
 
 /**
- * Helper class for providing sample content for user interfaces created by
- * Android template wizards.
+ * Basic "skills" for the content of a file list view used to display the single
+ * Vertretungsplan and Mensa files
  */
 public class FileSelectionListContent {
 
@@ -32,11 +32,9 @@ public class FileSelectionListContent {
         ITEMS.remove(position);
     }
 
-    public String[][] openPDF()
-    {
+    public String[][] openPDF() {
         String[][] pdffiles = new String[ITEMS.size()][2];
-        for(int i = 0; i < ITEMS.size(); i++)
-        {
+        for(int i = 0; i < ITEMS.size(); i++) {
             pdffiles[i][0] = ITEMS.get(i).content;
             pdffiles[i][1] = ITEMS.get(i).filepath;
         }
@@ -44,7 +42,7 @@ public class FileSelectionListContent {
     }
 
     /**
-     * A dummy item representing a piece of content.
+     * A item representing a single file
      */
     public static class Item {
         public final String id;

@@ -63,6 +63,8 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
         String get_url = "https://www.mwg-bayreuth.de/Login.html";
         String post_url = "https://www.mwg-bayreuth.de/Login.html";
 
+        String[][] localFiles; // x/0: path, x/1: filename, x/2: label, x/3: downloaded?
+
 
         /**
          * Preparation:
@@ -223,8 +225,20 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                                                 .getResources().getString(R.string.progress_searchforfiles);
                     publishProgress(searchfilesstr);
 
-                    // Array passed to FetchPDF
-                    String[][] foundFiles = new String[20][3];
+                    // Prepare array passed to FetchPDF
+                    String[][] foundFiles = new String[20][3]; // x/0: path, x/1: filename, x/2: label
+
+                    // Copy list of currently downloaded files to internal array
+                    localFiles = new String[20][3]; // x/0: filename, x/1: size, x/2: downloaded?
+                    int localFilesNumber = sharedPref.getInt(SharedPrefKeys.vplanFileNr, 0);
+                    for(int j = 0; j < localFilesNumber; j++) {
+                        localFiles[j][0] = sharedPref.getString(SharedPrefKeys.vplanFileFilename, "dadadidada");
+                        localFiles[j][1] = sharedPref.getString(SharedPrefKeys.vplanFileFilesize, "moinmoin");
+                        if(sharedPref.getBoolean(SharedPrefKeys.vplanFileDownloaded, false)) { localFiles[j][2] = "true"; }
+                        else { localFiles[j][2] = "false"; }
+                    }
+
+
 
                     while ((inputLine = in.readLine()) != null) {
                         // Login verkackt, falls der String doom auftaucht
@@ -262,42 +276,33 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                             String label = p.getLabel();
                             String size = p.getSize();
 
-                            // Fetch the old file size from the SharedPref
-                            String oldSize = sharedPref.getString(SharedPrefKeys.vplanButtonFilesize + i, "");
-
                             boolean noSizeGiven = false;
-                            boolean fetchFile   = false;
 
-                            // no file size given: check file name
-                            if(size == null) {
-                                noSizeGiven = true;
+                            // no file size given: add remark for later treatment
+                            if(size == null) noSizeGiven = true;
 
-                                String oldFilename = sharedPref.getString(SharedPrefKeys.vplanButtonFilename + i, "dadadidada blubblub");
-                                if(!oldFilename.equals(filename)) { fetchFile = true; }
-                            } else if (!oldSize.equals(size)) { fetchFile = true; }
-
-                            // old size =/= current size: add PDF file to "FETCH!!"-list
-                            if(fetchFile) {
+                            if(downloadFile(filename, size)) {
                                 foundfilescount += 1;
 
                                 String filesfoundstr = root.getApplicationContext()
-                                                           .getResources().getString(R.string.progress_filesfound);
+                                        .getResources().getString(R.string.progress_filesfound);
                                 dialog.setProgressNumberFormat(foundfilescount + " " + filesfoundstr);
 
                                 foundFiles[foundfilescount-1][0] = path;
                                 foundFiles[foundfilescount-1][1] = filename;
                                 foundFiles[foundfilescount-1][2] = label;
 
-                                speditor.putBoolean(SharedPrefKeys.vplanButtonFileUpdated + i, true);
+                                // TODO: Find better position for these lines
+                                speditor.putBoolean(SharedPrefKeys.vplanFileUpdated + i, true);
+                                speditor.putBoolean(SharedPrefKeys.vplanFileDownloaded + i, true);
                             }
 
-
                             // Write information to SharedPrefs
-                            // TODO: Support short labels
-                            speditor.putString(SharedPrefKeys.vplanButtonLabel + i, label);
-                            speditor.putString(SharedPrefKeys.vplanButtonFilename + i, filename);
+                            // TODO: Move this, support short labels
+                            speditor.putString(SharedPrefKeys.vplanFileLabel + i, label);
+                            speditor.putString(SharedPrefKeys.vplanFileFilename + i, filename);
 
-                            if(!noSizeGiven) { speditor.putString(SharedPrefKeys.vplanButtonFilesize + i, size); }
+                            if(!noSizeGiven) { speditor.putString(SharedPrefKeys.vplanFileFilesize + i, size); }
 
                             i++;
                         }
@@ -315,12 +320,12 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                             fetchPDF(foundFiles, foundfilescount, this);
                         }
                         
-                        speditor.putInt(SharedPrefKeys.vplanButtonNr, i);
+                        speditor.putInt(SharedPrefKeys.vplanFileNr, i);
                         speditor.putLong(SharedPrefKeys.vplanLastUpdate, now);
                         speditor.commit();
                     } else {
                         // Wrong credentials: avoid consequential errors
-                        speditor.putInt(SharedPrefKeys.vplanButtonNr, 0);
+                        speditor.putInt(SharedPrefKeys.vplanFileNr, 0);
                         speditor.commit();
                     }
                 } else { updatedFiles = -1; }
@@ -332,7 +337,30 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                 return new Integer(res);
             }
         }
+
+
+        /**
+         * Checks whether a file should be downloaded:
+         *   - download, if file is not present on device
+         *   - download, if file size (if given) has changed
+         *   - don't download, if file download skipped, broken, etc.
+         * @param filename - the name of the PDF file
+         * @param size - the size representation from the hyperlink
+         * @return whether to download this file or not
+         */
+        private boolean downloadFile(String filename, String size) {
+            for (String[] localFile : localFiles) {
+                if(localFile[0] != null) {
+                    if (localFile[0].equals(filename)) {
+                        return size != null && !localFile[1].equals(size) && localFile[2].equals("true");
+                    }
+                }
+            }
+
+            return true;
+        }
     }
+
 
 
     /**

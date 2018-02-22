@@ -36,22 +36,22 @@ class CacheManager {
     void clearFileCache() {
         // Remove Vertretungsplan file meta data from Shared Prefs
         speditor.putLong(SharedPrefKeys.vplanLastUpdate, 0);
-        speditor.putInt(SharedPrefKeys.vplanButtonNr, 0);
+        speditor.putInt(SharedPrefKeys.vplanFileNr, 0);
         for(int i = 0; i < 20; i++) {
-            speditor.putString(SharedPrefKeys.vplanButtonFilesize + i, "0,0 KiB");
-            speditor.putString(SharedPrefKeys.vplanButtonLabel + i, "");
-            speditor.putString(SharedPrefKeys.vplanButtonShortLabel + i, "");
-            speditor.putString(SharedPrefKeys.vplanButtonFilename + i, "");
+            speditor.putString(SharedPrefKeys.vplanFileFilesize + i, "0,0 KiB");
+            speditor.putString(SharedPrefKeys.vplanFileLabel + i, "");
+            speditor.putString(SharedPrefKeys.vplanFileShortLabel + i, "");
+            speditor.putString(SharedPrefKeys.vplanFileFilename + i, "");
         }
 
         // Remove Mensa menu file meta data from Shared Prefs
         speditor.putLong(SharedPrefKeys.mensaLastUpdate, 0);
-        speditor.putInt(SharedPrefKeys.mensaButtonNr, 0);
+        speditor.putInt(SharedPrefKeys.mensaFileNr, 0);
         for(int i = 0; i < 20; i++) {
-            speditor.putString(SharedPrefKeys.mensaButtonFilesize+ i, "0,0 KiB");
-            speditor.putString(SharedPrefKeys.mensaButtonLabel + i, "");
-            speditor.putString(SharedPrefKeys.mensaButtonShortLabel + i, "");
-            speditor.putString(SharedPrefKeys.mensaButtonFilename + i, "");
+            speditor.putString(SharedPrefKeys.mensaFileFilesize + i, "0,0 KiB");
+            speditor.putString(SharedPrefKeys.mensaFileLabel + i, "");
+            speditor.putString(SharedPrefKeys.mensaFileShortLabel + i, "");
+            speditor.putString(SharedPrefKeys.mensaFileFilename + i, "");
         }
 
         // Delete the time of the last News update from the Shared Prefs

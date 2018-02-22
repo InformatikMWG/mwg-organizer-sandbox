@@ -5,8 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -85,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
      * @param password - the correct password
      */
     public void saveLoginData(String username, String password) {
-        SharedPreferences sharedPref = getSharedPreferences(SharedPrefKeys.spPrefix, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences(SharedPrefKeys.spRoot, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(SharedPrefKeys.credUsername, username);
         editor.putString(SharedPrefKeys.credPassword, password);

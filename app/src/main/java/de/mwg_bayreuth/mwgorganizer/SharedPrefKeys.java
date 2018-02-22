@@ -7,38 +7,40 @@ package de.mwg_bayreuth.mwgorganizer;
  * stored can be changed easily
  */
 final class SharedPrefKeys {
-    static String spPrefix = "de.mwg_bayreuth.mwgorganizer";
+    static String spRoot = "de.mwg_bayreuth.mwgorganizer";
 
     // TODO: Shared Pref Keys for Version Control
 
     // Credentials
-    static String credUsername = spPrefix + ".cred.username";
-    static String credPassword = spPrefix + ".cred.password";
+    static String credUsername = spRoot + ".cred.username";
+    static String credPassword = spRoot + ".cred.password";
 
     // Vertretungsplan file information
-    static String vplanPath              = spPrefix + ".vertplan.path";
-    static String vplanLastUpdate        = spPrefix + ".vertplan.lastUpdate";
-    static String vplanForceUpdate       = spPrefix + ".vertplan.forceUpdate";
-    static String vplanButtonNr          = spPrefix + ".vertplan.buttons.number";
-    static String vplanButtonLabel       = spPrefix + ".vertplan.buttons.label";
-    static String vplanButtonShortLabel  = spPrefix + ".vertplan.buttons.shortlabel";
-    static String vplanButtonFilename    = spPrefix + ".vertplan.buttons.filename";
-    static String vplanButtonFilesize    = spPrefix + ".vertplan.buttons.filesize";
-    static String vplanButtonFileUpdated = spPrefix + ".vertplan.buttons.fileupdated";
+    static String vplanPath              = spRoot + ".vertplan.path";
+    static String vplanLastUpdate        = spRoot + ".vertplan.lastUpdate";
+    static String vplanForceUpdate       = spRoot + ".vertplan.forceUpdate";
+    static String vplanFileNr            = spRoot + ".vertplan.file.number";
+    static String vplanFileLabel         = spRoot + ".vertplan.file.label";
+    static String vplanFileShortLabel    = spRoot + ".vertplan.file.shortlabel";
+    static String vplanFileFilename      = spRoot + ".vertplan.file.filename";
+    static String vplanFileFilesize      = spRoot + ".vertplan.file.filesize";
+    static String vplanFileUpdated       = spRoot + ".vertplan.file.updated";
+    static String vplanFileDownloaded    = spRoot + ".vertplan.file.downloaded";
 
     // Mensa file information
-    static String mensaLastUpdate        = spPrefix + ".mensa.lastUpdate";
-    static String mensaForceUpdate       = spPrefix + ".mensa.forceUpdate";
-    static String mensaButtonNr          = spPrefix + ".mensa.buttons.number";
-    static String mensaButtonLabel       = spPrefix + ".mensa.buttons.label";
-    static String mensaButtonShortLabel  = spPrefix + ".mensa.buttons.shorlabel";
-    static String mensaButtonFilename    = spPrefix + ".mensa.buttons.filename";
-    static String mensaButtonFilesize    = spPrefix + ".mensa.buttons.filesize";
-    static String mensaButtonFileUpdated = spPrefix + ".mensa.buttons.fileupdated";
+    static String mensaLastUpdate        = spRoot + ".mensa.lastUpdate";
+    static String mensaForceUpdate       = spRoot + ".mensa.forceUpdate";
+    static String mensaFileNr            = spRoot + ".mensa.file.number";
+    static String mensaFileLabel         = spRoot + ".mensa.file.label";
+    static String mensaFileShortLabel    = spRoot + ".mensa.file.shorlabel";
+    static String mensaFileFilename      = spRoot + ".mensa.file.filename";
+    static String mensaFileFilesize      = spRoot + ".mensa.file.filesize";
+    static String mensaFileUpdated       = spRoot + ".mensa.file.updated";
+    static String mensaFileDownloaded    = spRoot + ".mensa.file.downloaded";
 
     // News
-    static String newsLastUpdate  = spPrefix + ".news.lastUpdate";
-    static String newsForceUpdate = spPrefix + ".news.forceUpdate";
+    static String newsLastUpdate  = spRoot + ".news.lastUpdate";
+    static String newsForceUpdate = spRoot + ".news.forceUpdate";
 
     // TODO: Shared Pref Keys for Settings
     // TODO: Shared Pref Keys for Easter Eggs

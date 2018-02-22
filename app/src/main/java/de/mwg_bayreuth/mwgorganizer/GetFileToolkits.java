@@ -77,18 +77,18 @@ abstract class GetFileToolkits {
                 boolean isOld = true;
 
                 // Is this an outdated / missing Vertretungsplan?
-                int nrVertplanButtons = sharedPref.getInt(SharedPrefKeys.vplanButtonNr, 0);
+                int nrVertplanButtons = sharedPref.getInt(SharedPrefKeys.vplanFileNr, 0);
                 for (int i = 0; i < nrVertplanButtons; i++) {
-                    if (f.equals(sharedPref.getString(SharedPrefKeys.vplanButtonFilename + i, ""))) {
+                    if (f.equals(sharedPref.getString(SharedPrefKeys.vplanFileFilename + i, ""))) {
                         isOld = false;
                         break;
                     }
                 }
 
                 // Is this an outdated / missing Mensa lunch schedule?
-                int nrMensabuttons = sharedPref.getInt(SharedPrefKeys.mensaButtonNr, 0);
+                int nrMensabuttons = sharedPref.getInt(SharedPrefKeys.mensaFileNr, 0);
                 for (int i = 0; i < nrMensabuttons; i++) {
-                    if (f.equals(sharedPref.getString(SharedPrefKeys.mensaButtonFilename + i, ""))) {
+                    if (f.equals(sharedPref.getString(SharedPrefKeys.mensaFileFilename + i, ""))) {
                         isOld = false;
                         break;
                     }

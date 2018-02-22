@@ -46,7 +46,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
         setContentView(R.layout.activity_mwgorganizer);
 
 
-        sharedPref = getSharedPreferences(SharedPrefKeys.spPrefix, Context.MODE_PRIVATE);
+        sharedPref = getSharedPreferences(SharedPrefKeys.spRoot, Context.MODE_PRIVATE);
         speditor = sharedPref.edit();
 
         extDirectory = getExternalFilesDir(null);
@@ -159,22 +159,16 @@ implements NavigationView.OnNavigationItemSelectedListener,
     private void exchangeFragment(Class fragmentClass) {
         android.support.v4.app.Fragment fragment = null;
         try {
-            switch(currentFrag) {
-                case VplanFrag:
-                    fragment = FileListFragment.newInstance(".vertplan");
-                    fileSelectionFragment = (FileSelectionFragment) fragment;
-                    break;
+            if(fragmentClass == FileListFragment.class) {
+                switch(currentFrag) {
+                    case VplanFrag: fragment = FileListFragment.newInstance(".vertplan"); break;
+                    case MplanFrag: fragment = FileListFragment.newInstance(".mensa");    break;
+                    default:        break;
+                }
 
-                case MplanFrag:
-                    fragment = FileListFragment.newInstance(".mensa");
-                    fileSelectionFragment = (FileSelectionFragment) fragment;
-                    break;
-
-                default:
-                    fragment = (android.support.v4.app.Fragment) fragmentClass.newInstance();
-                    break;
-            }
-        } catch (Exception e) { e.printStackTrace(); }
+                fileSelectionFragment = (FileSelectionFragment) fragment;
+            } else fragment = (android.support.v4.app.Fragment) fragmentClass.newInstance();
+        } catch(Exception e) { e.printStackTrace(); }
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
         initButtons();
@@ -227,7 +221,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
                 if(updatedFiles > 0) {
                     String filesupdatedstr = getApplicationContext().getResources().getString(R.string.progress_filesupdated);
                     snackbarString = updatedFiles + " " + filesupdatedstr;
-                } else { snackbarString = getApplicationContext().getResources().getString(R.string.progress_allfilesuptodate); }
+                } else snackbarString = getApplicationContext().getResources().getString(R.string.progress_allfilesuptodate);
             } else {
                 // News update: no further information
                 snackbarString = getApplicationContext().getResources().getString(R.string.progress_newsupdated);
@@ -238,7 +232,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
         }
 
         // Don't show snackbar if update has been performed too recently & has not been forced
-        if(updatedFiles != 237) { Snackbar.make(view, snackbarString, Snackbar.LENGTH_SHORT).show(); }
+        if(updatedFiles != 237) Snackbar.make(view, snackbarString, Snackbar.LENGTH_SHORT).show();
     }
 
 
