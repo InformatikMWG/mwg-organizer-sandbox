@@ -64,6 +64,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
         String post_url = "https://www.mwg-bayreuth.de/Login.html";
 
         String[][] localFiles; // x/0: path, x/1: filename, x/2: label, x/3: downloaded?
+        int localFilesNumber;
 
 
         /**
@@ -230,11 +231,11 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
 
                     // Copy list of currently downloaded files to internal array
                     localFiles = new String[20][3]; // x/0: filename, x/1: size, x/2: downloaded?
-                    int localFilesNumber = sharedPref.getInt(SharedPrefKeys.vplanFileNr, 0);
+                    localFilesNumber = sharedPref.getInt(SharedPrefKeys.vplanFileNr, 0);
                     for(int j = 0; j < localFilesNumber; j++) {
-                        localFiles[j][0] = sharedPref.getString(SharedPrefKeys.vplanFileFilename, "dadadidada");
-                        localFiles[j][1] = sharedPref.getString(SharedPrefKeys.vplanFileFilesize, "moinmoin");
-                        if(sharedPref.getBoolean(SharedPrefKeys.vplanFileDownloaded, false)) { localFiles[j][2] = "true"; }
+                        localFiles[j][0] = sharedPref.getString(SharedPrefKeys.vplanFileFilename + j, "dadadidada");
+                        localFiles[j][1] = sharedPref.getString(SharedPrefKeys.vplanFileFilesize + j, "moinmoin");
+                        if(sharedPref.getBoolean(SharedPrefKeys.vplanFileDownloaded + j, false)) { localFiles[j][2] = "true"; }
                         else { localFiles[j][2] = "false"; }
                     }
 
@@ -349,10 +350,10 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
          * @return whether to download this file or not
          */
         private boolean downloadFile(String filename, String size) {
-            for (String[] localFile : localFiles) {
-                if(localFile[0] != null) {
-                    if (localFile[0].equals(filename)) {
-                        return size != null && !localFile[1].equals(size) && localFile[2].equals("true");
+            for (int i = 0; i < localFilesNumber; i++) {
+                if(localFiles[0] != null) {
+                    if (localFiles[i][0].equals(filename)) {
+                        return size != null && !localFiles[i][1].equals(size) && localFiles[i][2].equals("true");
                     }
                 }
             }
