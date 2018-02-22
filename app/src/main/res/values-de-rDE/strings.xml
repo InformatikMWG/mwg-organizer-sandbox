@@ -54,6 +54,12 @@
     <string name="settings.header">Einstellungen</string>
     <string name="settings.cache">Cache-Verwaltung</string>
     <string name="general.lastUpdate">"Zuletzt aktualisiert: "</string>
+    <string name="settings.cache.clearcache">Lokalen Cache löschen</string>
+    <string name="settings.cache.clearcache.descr">Lösche alle lokalen Kopien heruntergeladener Dateien</string>
+    <string name="settings.cache.clearcache.snackbar">Lokaler Cache gelöscht</string>
+    <string name="settings.cache.clearcred">Zugangsdaten löschen</string>
+    <string name="settings.cache.clearcred.descr">Lösche die lokal abgespeicherten Zugangsdaten</string>
+    <string name="settings.cache.clearcred.snackbar">Zugangsdaten gelöscht</string>
 
 
     <!-- Sort strings below in a proper order in the groups on top of the file-->

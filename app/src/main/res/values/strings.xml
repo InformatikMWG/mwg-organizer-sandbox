@@ -115,6 +115,12 @@
     <!-- Sort strings below in a proper order in the groups on top of the file-->
     <string name="app_copyright" translatable="false">&#169; 2017-18 MWG Bayreuth</string>
     <string name="general.lastUpdate">Zuletzt aktualisiert:</string>
+    <string name="settings.cache.clearcache">Lokalen Cache löschen</string>
+    <string name="settings.cache.clearcache.descr">Lösche alle lokalen Kopien heruntergeladener Dateien</string>
+    <string name="settings.cache.clearcache.snackbar">Lokaler Cache gelöscht</string>
+    <string name="settings.cache.clearcred">Zugangsdaten löschen</string>
+    <string name="settings.cache.clearcred.descr">Lösche die lokal abgespeicherten Zugangsdaten</string>
+    <string name="settings.cache.clearcred.snackbar">Zugangsdaten gelöscht</string>
 
 
 </resources>

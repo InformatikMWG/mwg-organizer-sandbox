@@ -1,5 +1,6 @@
 package de.mwg_bayreuth.mwgorganizer;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -185,20 +187,24 @@ public class Settings extends AppCompatPreferenceActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_cache);
-            findPreference("clear_cache_prefbutton").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
-            {
+            findPreference("clear_cache_prefbutton").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @SuppressLint("CommitPrefEdits")
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     new CacheManager(getActivity().getSharedPreferences(SharedPrefKeys.spRoot, Context.MODE_PRIVATE).edit(),getActivity().getExternalFilesDir(null)).clearFileCache();
+                    String snackbarStr = getActivity().getApplicationContext().getResources().getString(R.string.settings_cache_clearcache_snackbar);
+                    Snackbar.make(getView(), snackbarStr, Snackbar.LENGTH_SHORT).show();
                     return true;
                 }
             });
 
-            findPreference("clear_cred_prefbutton").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
-            {
+            findPreference("clear_cred_prefbutton").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @SuppressLint("CommitPrefEdits")
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     new CacheManager(getActivity().getSharedPreferences(SharedPrefKeys.spRoot, Context.MODE_PRIVATE).edit(),getActivity().getExternalFilesDir(null)).clearCredentials();
+                    String snackbarStr = getActivity().getApplicationContext().getResources().getString(R.string.settings_cache_clearcred_snackbar);
+                    Snackbar.make(getView(), snackbarStr, Snackbar.LENGTH_SHORT).show();
                     return true;
                 }
             });

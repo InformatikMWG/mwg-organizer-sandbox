@@ -277,10 +277,6 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                             String label = p.getLabel();
                             String size = p.getSize();
 
-                            boolean noSizeGiven = false;
-
-                            // no file size given: add remark for later treatment
-                            if(size == null) noSizeGiven = true;
 
                             if(downloadFile(filename, size)) {
                                 foundfilescount += 1;
@@ -303,7 +299,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                             speditor.putString(SharedPrefKeys.vplanFileLabel + i, label);
                             speditor.putString(SharedPrefKeys.vplanFileFilename + i, filename);
 
-                            if(!noSizeGiven) { speditor.putString(SharedPrefKeys.vplanFileFilesize + i, size); }
+                            if(size != null) { speditor.putString(SharedPrefKeys.vplanFileFilesize + i, size); }
 
                             i++;
                         }
@@ -335,7 +331,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
             finally {
                 dialog.setMax(1);
                 dialog.setProgress(1);
-                return new Integer(res);
+                return res;
             }
         }
 
@@ -442,26 +438,27 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
 
 
                 if (responseCode == HttpURLConnection.HTTP_OK) {
-                    InputStream in   = con.getInputStream();
-                    int lengthOfFile = con.getContentLength();
+                    InputStream in = con.getInputStream();
+                    int fileSize   = con.getContentLength();
 
                     root.updateFilename(filelabel);
                     dialog.setProgress(0);
-                    dialog.setMax(lengthOfFile);
+                    dialog.setMax(fileSize);
                     dialog.setProgressNumberFormat((updatedFiles + 1) + "/" + foundfilescount);
 
 
                     FileOutputStream fos = new FileOutputStream(new File(filedir + "/" + filename));
 
-                    int length = -1;
+
                     byte[] buffer = new byte[1024];
 
-                    int total = 0;
+                    int fragmentLength;
+                    int alreadyDownloaded = 0;
 
-                    while ((length = in.read(buffer)) > -1) {
-                        total += length;
-                        dialog.setProgress(total);
-                        fos.write(buffer, 0, length);
+                    while ((fragmentLength = in.read(buffer)) > -1) {
+                        alreadyDownloaded += fragmentLength;
+                        dialog.setProgress(alreadyDownloaded);
+                        fos.write(buffer, 0, fragmentLength);
                     }
                     fos.close();
                     in.close();

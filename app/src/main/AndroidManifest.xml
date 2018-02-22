@@ -45,6 +45,7 @@
             android:screenOrientation="portrait" />
 
         <activity android:name=".LoginActivity"
+            android:parentActivityName=".MWGOrganizer"
             android:screenOrientation="portrait" />
     </application>
 
