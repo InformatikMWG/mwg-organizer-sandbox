@@ -23,6 +23,7 @@ final class SharedPrefKeys {
     static String vplanFileLabel         = spRoot + ".vertplan.file.label";
     static String vplanFileShortLabel    = spRoot + ".vertplan.file.shortlabel";
     static String vplanFileFilename      = spRoot + ".vertplan.file.filename";
+    static String vplanFileIsVplan       = spRoot + ".vertplan.file.isvplan";
     static String vplanFileFilesize      = spRoot + ".vertplan.file.filesize";
     static String vplanFileUpdated       = spRoot + ".vertplan.file.updated";
     static String vplanFileDownloaded    = spRoot + ".vertplan.file.downloaded";

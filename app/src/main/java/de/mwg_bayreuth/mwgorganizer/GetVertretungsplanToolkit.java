@@ -276,6 +276,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                             String filename = p.getFilename();
                             String label = p.getLabel();
                             String size = p.getSize();
+                            boolean isVplan = p.getIsVplan();
 
 
                             if(downloadFile(filename, size)) {
@@ -298,6 +299,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                             // TODO: Move this, support short labels
                             speditor.putString(SharedPrefKeys.vplanFileLabel + i, label);
                             speditor.putString(SharedPrefKeys.vplanFileFilename + i, filename);
+                            speditor.putBoolean(SharedPrefKeys.vplanFileIsVplan + i, isVplan);
 
                             if(size != null) { speditor.putString(SharedPrefKeys.vplanFileFilesize + i, size); }
 

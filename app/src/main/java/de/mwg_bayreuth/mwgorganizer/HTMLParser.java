@@ -11,6 +11,7 @@ class HTMLParser {
     private String filename;
     private String size;
     private String label;
+    private boolean isVplan;
 
 
     HTMLParser(String input) {
@@ -21,18 +22,19 @@ class HTMLParser {
     }
 
 
-    String getPath() {
+    String  getPath() {
         return path;
     }
-    String getFilename() {
+    String  getFilename() {
         return filename;
     }
-    String getSize() {
+    String  getSize() {
         return size;
     }
-    String getLabel() {
+    String  getLabel() {
         return label;
     }
+    boolean getIsVplan() { return isVplan; }
 
 
 
@@ -88,6 +90,8 @@ class HTMLParser {
                 label.charAt(10) == '_' && label.charAt(13) == '_') ||
                (label.length() == 13 && label.charAt(4) == '_' &&
                 label.charAt(7) == '_' && label.charAt(10) == '_')) {
+            isVplan = true;
+
             // Label has the format YYYY_MM_DD_WW[_]
             String year = label.substring(0,4);
             String month = label.substring(5,7);
@@ -96,6 +100,8 @@ class HTMLParser {
 
             sortedLabel = weekd + ", " + day + "." + month + "." + year;
         } else {
+            isVplan = false;
+
             String partsortLabel;
 
             if(label.length() >= 10) {
