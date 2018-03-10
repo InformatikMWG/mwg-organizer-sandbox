@@ -20,6 +20,7 @@ final class SharedPrefKeys {
     static String vplanLastUpdate        = spRoot + ".vertplan.lastUpdate";
     static String vplanForceUpdate       = spRoot + ".vertplan.forceUpdate";
     static String vplanFileNr            = spRoot + ".vertplan.file.number";
+    static String vplanUpdatedFilesNr    = spRoot + ".vertplan.file.updatednr";
     static String vplanFileLabel         = spRoot + ".vertplan.file.label";
     static String vplanFileShortLabel    = spRoot + ".vertplan.file.shortlabel";
     static String vplanFileFilename      = spRoot + ".vertplan.file.filename";
@@ -32,6 +33,7 @@ final class SharedPrefKeys {
     static String mensaLastUpdate        = spRoot + ".mensa.lastUpdate";
     static String mensaForceUpdate       = spRoot + ".mensa.forceUpdate";
     static String mensaFileNr            = spRoot + ".mensa.file.number";
+    static String mensaUpdatedFilesNr    = spRoot + ".mensa.file.updatednr";
     static String mensaFileLabel         = spRoot + ".mensa.file.label";
     static String mensaFileShortLabel    = spRoot + ".mensa.file.shorlabel";
     static String mensaFileFilename      = spRoot + ".mensa.file.filename";

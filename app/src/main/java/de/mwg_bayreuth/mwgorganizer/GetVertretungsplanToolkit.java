@@ -16,6 +16,7 @@ import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 
 /**
@@ -25,7 +26,7 @@ import java.net.URL;
 class GetVertretungsplanToolkit extends GetFileToolkits {
     private CacheManager cachemanager;
     private int foundfilescount;
-    private int updatedFiles;
+    private int updatedFilesNr;
 
 
 
@@ -43,7 +44,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                               MWGOrganizer root) {
         setUpReferences(sharedPref, speditor, dialog, filedir, root);
         this.cachemanager = cachemanager;
-        updatedFiles = -1;
+        updatedFilesNr = -1;
         new FetchHtmlTask().execute();
     }
 
@@ -60,11 +61,10 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
      * and trigger FetchPDF
      */
     private class FetchHtmlTask  extends AsyncTask<Void, String, Integer> {
-        String get_url = "https://www.mwg-bayreuth.de/Login.html";
+        String get_url  = "https://www.mwg-bayreuth.de/Login.html";
         String post_url = "https://www.mwg-bayreuth.de/Login.html";
 
-        String[][] localFiles; // x/0: path, x/1: filename, x/2: label, x/3: downloaded?
-        int localFilesNumber;
+        ArrayList<PDFFile> localFiles;
 
 
         /**
@@ -104,7 +104,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                 root.setupButtons();
                 setLastUpdateTimeLabel();
                 deleteFiles();
-                root.showUpdateSummary(false, updatedFiles);
+                root.showUpdateSummary(false, updatedFilesNr);
             }
         }
 
@@ -144,6 +144,24 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
             int res = 1;
 
 
+            ArrayList<PDFFile> localFiles = new ArrayList<PDFFile>();
+
+            int totalFiles = sharedPref.getInt(SharedPrefKeys.vplanFileNr, 0);
+            for(int i = 0; i < totalFiles; i++) {
+                String  filename = sharedPref.getString(SharedPrefKeys.vplanFileFilename + i, "");
+                String  label    = sharedPref.getString(SharedPrefKeys.vplanFileLabel + i, "");
+                String  size     = sharedPref.getString(SharedPrefKeys.vplanFileFilesize + i, "");
+                boolean isVplan  = sharedPref.getBoolean(SharedPrefKeys.vplanFileIsVplan + i, false);
+                PDFFile f        = new PDFFile("", filename, label, "", size, isVplan);
+                localFiles.add(f);
+            }
+            this.localFiles = localFiles;
+
+
+            ArrayList<PDFFile> foundVplanFiles = new ArrayList<PDFFile>();
+            ArrayList<PDFFile> foundInfoFiles  = new ArrayList<PDFFile>();
+            ArrayList<PDFFile> updatedFiles    = new ArrayList<PDFFile>();
+            
             try {
                 String username = sharedPref.getString(SharedPrefKeys.credUsername, "dadadidada");
                 String password = sharedPref.getString(SharedPrefKeys.credPassword, "blubblub");
@@ -160,7 +178,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
 
                 // Don't update when last update less than 20 min ago and update wasn't forced
                 // Have fun finding the relation between 42 and 237 :D
-                if((timeSinceLastUpdate < 20 * 60 * 1000) && !forceUpdate) { updatedFiles = 237; return 42; }
+                if((timeSinceLastUpdate < 20 * 60 * 1000) && !forceUpdate) { updatedFilesNr = 237; return 42; }
 
                 // Preparation for login: Create a cookie manager
                 CookieManager manager = new CookieManager();
@@ -184,7 +202,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                         }
                     }
                     in.close();
-                } else { updatedFiles = -1; Log.e("test", "GET request failed"); }
+                } else { updatedFilesNr = -1; Log.e("test", "GET request failed"); }
 
 
 
@@ -217,29 +235,15 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                     String aim  = ".*tl_files.*pdf.*";                     // Pattern for PDF-Files
                     String uaim = ".*apk.*";                               // Pattern for APK-Files
                     String doom = "<h1>Bitte Loggen Sie sich ein</h1>";    // Straight out Login-Page
-                    int i = 0;
 
 
-                    boolean newVersionAvailable = false;
 
                     String searchfilesstr = root.getApplicationContext()
                                                 .getResources().getString(R.string.progress_searchforfiles);
                     publishProgress(searchfilesstr);
 
-                    // Prepare array passed to FetchPDF
-                    String[][] foundFiles = new String[20][3]; // x/0: path, x/1: filename, x/2: label
 
-                    // Copy list of currently downloaded files to internal array
-                    localFiles = new String[20][3]; // x/0: filename, x/1: size, x/2: downloaded?
-                    localFilesNumber = sharedPref.getInt(SharedPrefKeys.vplanFileNr, 0);
-                    for(int j = 0; j < localFilesNumber; j++) {
-                        localFiles[j][0] = sharedPref.getString(SharedPrefKeys.vplanFileFilename + j, "dadadidada");
-                        localFiles[j][1] = sharedPref.getString(SharedPrefKeys.vplanFileFilesize + j, "moinmoin");
-                        if(sharedPref.getBoolean(SharedPrefKeys.vplanFileDownloaded + j, false)) { localFiles[j][2] = "true"; }
-                        else { localFiles[j][2] = "false"; }
-                    }
-
-
+                    boolean newVersionAvailable = false;
 
                     while ((inputLine = in.readLine()) != null) {
                         // Login verkackt, falls der String doom auftaucht
@@ -252,14 +256,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                             HTMLParser p = new HTMLParser(inputLine);
                             String label = p.getLabel();
 
-                            /**
-                            if(UpdateTrigger.updateAvailable(label)) {
-                                // Update available
-                                editor.putBoolean(SharedPrefKeys.UpdateFlag, true);
-                                editor.commit();
-                                newVersionAvailable = true;
-                            }
-                            */
+                            // newVersionAvailable = true;
                         }
 
                         // Unset update flag when no newer version is available
@@ -272,63 +269,83 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                         if (inputLine.matches(aim)) {
                             // Determine path, filename, -label and -size
                             HTMLParser p = new HTMLParser(inputLine);
-                            String path = p.getPath();
-                            String filename = p.getFilename();
-                            String label = p.getLabel();
-                            String size = p.getSize();
-                            boolean isVplan = p.getIsVplan();
 
+                            PDFFile f = new PDFFile(p.getPath(), p.getFilename(), p.getLabel(), p.getLabel(), p.getSize(), p.getIsVplan());
 
-                            if(downloadFile(filename, size)) {
+                            if(p.getIsVplan()) { foundVplanFiles.add(f); }
+                            else               { foundInfoFiles.add(f); }
+
+                            if(downloadFile(f)) {
                                 foundfilescount += 1;
 
                                 String filesfoundstr = root.getApplicationContext()
                                         .getResources().getString(R.string.progress_filesfound);
                                 dialog.setProgressNumberFormat(foundfilescount + " " + filesfoundstr);
 
-                                foundFiles[foundfilescount-1][0] = path;
-                                foundFiles[foundfilescount-1][1] = filename;
-                                foundFiles[foundfilescount-1][2] = label;
-
-                                // TODO: Find better position for these lines
-                                speditor.putBoolean(SharedPrefKeys.vplanFileUpdated + i, true);
-                                speditor.putBoolean(SharedPrefKeys.vplanFileDownloaded + i, true);
+                                updatedFiles.add(f);
                             }
+                        }
 
-                            // Write information to SharedPrefs
-                            // TODO: Move this, support short labels
-                            speditor.putString(SharedPrefKeys.vplanFileLabel + i, label);
-                            speditor.putString(SharedPrefKeys.vplanFileFilename + i, filename);
-                            speditor.putBoolean(SharedPrefKeys.vplanFileIsVplan + i, isVplan);
+                        int i = 0;
 
-                            if(size != null) { speditor.putString(SharedPrefKeys.vplanFileFilesize + i, size); }
-
+                        // Write information to SharedPrefs
+                        for(PDFFile file: foundVplanFiles) {
+                            speditor.putString(SharedPrefKeys.vplanFileLabel + i, file.label);
+                            speditor.putString(SharedPrefKeys.vplanFileFilename + i, file.filename);
+                            speditor.putBoolean(SharedPrefKeys.vplanFileIsVplan + i, file.isVplan);
+                            if(file.size != null) { speditor.putString(SharedPrefKeys.vplanFileFilesize + i, file.size); }
                             i++;
                         }
+
+                        for(PDFFile file: foundInfoFiles) {
+                            speditor.putString(SharedPrefKeys.vplanFileLabel + i, file.label);
+                            speditor.putString(SharedPrefKeys.vplanFileFilename + i, file.filename);
+                            speditor.putBoolean(SharedPrefKeys.vplanFileIsVplan + i, file.isVplan);
+                            if(file.size != null) { speditor.putString(SharedPrefKeys.vplanFileFilesize + i, file.size); }
+                            i++;
+                        }
+
+                        speditor.putInt(SharedPrefKeys.vplanFileNr, i);
+                        speditor.commit();
                     }
                     in.close();
 
                     if(res != 13) {
                         // Update sucessful (?): download files, save button nr & update time
 
-                        updatedFiles = 0;
+                        updatedFilesNr = 0;
                         if(foundfilescount != 0) {
                             String fdlprepstr = root.getApplicationContext()
                                                     .getResources().getString(R.string.progress_filedlprep);
                             publishProgress(fdlprepstr);
-                            fetchPDF(foundFiles, foundfilescount, this);
+
+                            int filesInSPrefs = sharedPref.getInt(SharedPrefKeys.vplanFileNr, 0);
+
+                            for(PDFFile file: updatedFiles) {
+                                for(int i = 0; i < filesInSPrefs; i++) {
+                                    String filenameFromSPs = sharedPref.getString(SharedPrefKeys.vplanFileFilename + i, "");
+
+                                    if (file.filename.equals(filenameFromSPs)) {
+                                        speditor.putBoolean(SharedPrefKeys.vplanFileDownloaded + i, false);
+                                        speditor.commit();
+                                    }
+                                }
+                            }
+
+                            fetchPDF(updatedFiles, this);
                         }
-                        
-                        speditor.putInt(SharedPrefKeys.vplanFileNr, i);
+
+                        speditor.putInt(SharedPrefKeys.vplanUpdatedFilesNr, foundfilescount);
                         speditor.putLong(SharedPrefKeys.vplanLastUpdate, now);
                         speditor.commit();
                     } else {
                         // Wrong credentials: avoid consequential errors
+                        speditor.putInt(SharedPrefKeys.vplanUpdatedFilesNr, 0);
                         speditor.putInt(SharedPrefKeys.vplanFileNr, 0);
                         speditor.commit();
                     }
-                } else { updatedFiles = -1; }
-            } catch (Exception e) { updatedFiles = -1; e.printStackTrace(); }
+                } else { updatedFilesNr = -1; }
+            } catch (Exception e) { updatedFilesNr = -1; e.printStackTrace(); }
 
             finally {
                 dialog.setMax(1);
@@ -343,16 +360,13 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
          *   - download, if file is not present on device
          *   - download, if file size (if given) has changed
          *   - don't download, if file download skipped, broken, etc.
-         * @param filename - the name of the PDF file
-         * @param size - the size representation from the hyperlink
+         * @param f - a PDFFile element
          * @return whether to download this file or not
          */
-        private boolean downloadFile(String filename, String size) {
-            for (int i = 0; i < localFilesNumber; i++) {
-                if(localFiles[0] != null) {
-                    if (localFiles[i][0].equals(filename)) {
-                        return size != null && !localFiles[i][1].equals(size) && localFiles[i][2].equals("true");
-                    }
+        private boolean downloadFile(PDFFile f) {
+            for(PDFFile file: localFiles) {
+                if(file.filename.equals(f.filename)) {
+                    return !file.size.equals(f.size);
                 }
             }
 
@@ -364,10 +378,10 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
 
     /**
      *
-     * @param foundFiles - an array containing all found files to be updated
-     * @param foundfilescount - the number of found files
+     * @param filesToDownload - a list containing all files that should be downloaded
+     * @param root - the root FetchHtmlTask
      */
-    private void fetchPDF(String[][] foundFiles, int foundfilescount,
+    private void fetchPDF(ArrayList<PDFFile> filesToDownload,
                           de.mwg_bayreuth.mwgorganizer.GetVertretungsplanToolkit.FetchHtmlTask root) {
         try {
             String get_url  = "https://www.mwg-bayreuth.de/Login.html";
@@ -403,7 +417,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                     }
                 }
                 in.close();
-            } else { updatedFiles = -1; Log.e("test", "GET request not worked"); }
+            } else { updatedFilesNr = -1; Log.e("test", "GET request not worked"); }
 
 
 
@@ -424,12 +438,11 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
             Log.e("test", "POST Response Code :: " + responseCode);
 
 
-
             // Download all files in one go
-            for(int i = 0; i < foundfilescount; i++) {
-                String path = foundFiles[i][0];
-                String filename = foundFiles[i][1];
-                String filelabel = foundFiles[i][2];
+            for(PDFFile file: filesToDownload) {
+                String path = file.path;
+                String filename = file.filename;
+                String filelabel = file.label;
 
                 obj = new URL(pdf_url + path);
                 con = (HttpURLConnection) obj.openConnection();
@@ -446,7 +459,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                     root.updateFilename(filelabel);
                     dialog.setProgress(0);
                     dialog.setMax(fileSize);
-                    dialog.setProgressNumberFormat((updatedFiles + 1) + "/" + foundfilescount);
+                    dialog.setProgressNumberFormat((updatedFilesNr + 1) + "/" + foundfilescount);
 
 
                     FileOutputStream fos = new FileOutputStream(new File(filedir + "/" + filename));
@@ -465,11 +478,45 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                     fos.close();
                     in.close();
 
-                    updatedFiles++;
+
+                    int filesInSPrefs = sharedPref.getInt(SharedPrefKeys.vplanFileNr, 0);
+
+                    for(int i = 0; i < filesInSPrefs; i++) {
+                        String filenameFromSPs = sharedPref.getString(SharedPrefKeys.vplanFileFilename + i, "");
+
+                        if(filename.equals(filenameFromSPs)) {
+                            speditor.putBoolean(SharedPrefKeys.vplanFileUpdated + i, true);
+                            speditor.putBoolean(SharedPrefKeys.vplanFileDownloaded + i, true);
+                            speditor.commit();
+                        }
+                    }
+
+
+                    updatedFilesNr++;
 
                     Log.e("test", "File downloaded");
                 } else { Log.e("test", "GET PDF request not worked"); }
             }
-        } catch (Exception e) { updatedFiles = -1; e.printStackTrace(); }
+        } catch (Exception e) { updatedFilesNr = -1; e.printStackTrace(); }
+    }
+    
+    
+    
+    private class PDFFile {
+        String  path;
+        String  filename;
+        String  label;
+        String  shortlabel;
+        String  size;
+        boolean isVplan;
+        
+        PDFFile(String path, String filename, String label, String shortlabel, String size, boolean isVplan) {
+            this.path = path;
+            this.filename = filename;
+            this.label = label;
+            this.shortlabel = label;
+            this.size = size;
+            this.isVplan = isVplan;
+        }
     }
 }

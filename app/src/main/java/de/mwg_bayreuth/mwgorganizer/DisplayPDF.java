@@ -25,6 +25,7 @@ import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 
 public class DisplayPDF extends AppCompatActivity {
     String[] filelabels;
+    private SharedPreferences sharedPref;
     private SharedPreferences.Editor speditor;
     String fileset;
 
@@ -52,7 +53,7 @@ public class DisplayPDF extends AppCompatActivity {
         ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(pagerAdapt);
         mViewPager.setCurrentItem(currentFile);
-        SharedPreferences sharedPref = getSharedPreferences(SharedPrefKeys.spRoot, Context.MODE_PRIVATE);
+        sharedPref = getSharedPreferences(SharedPrefKeys.spRoot, Context.MODE_PRIVATE);
         speditor = sharedPref.edit();
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -62,11 +63,26 @@ public class DisplayPDF extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 switch(fileset) {
-                    case ".vertplan": speditor.putBoolean(SharedPrefKeys.vplanFileUpdated + position, false); break;
-                    case ".mensa":    speditor.putBoolean(SharedPrefKeys.mensaFileUpdated + position, false); break;
+                    case ".vertplan":
+                        if(sharedPref.getBoolean(SharedPrefKeys.vplanFileUpdated + position, false)) {
+                            speditor.putBoolean(SharedPrefKeys.vplanFileUpdated + position, false);
+                            int updatedFiles = sharedPref.getInt(SharedPrefKeys.vplanUpdatedFilesNr + position, 0);
+                            if(updatedFiles > 0)
+                                speditor.putInt(SharedPrefKeys.vplanUpdatedFilesNr + position, updatedFiles - 1);
+                        }
+                        break;
+                    case ".mensa":
+                        if(sharedPref.getBoolean(SharedPrefKeys.mensaFileUpdated + position, false)) {
+                            speditor.putBoolean(SharedPrefKeys.mensaFileUpdated + position, false);
+                            int updatedFiles = sharedPref.getInt(SharedPrefKeys.mensaUpdatedFilesNr + position, 0);
+                            if(updatedFiles > 0)
+                                speditor.putInt(SharedPrefKeys.mensaUpdatedFilesNr + position, updatedFiles - 1);
+                        }
+                        break;
                     default: break;
                 }
                 speditor.commit();
+
                 setTitle(filelabels[position]);
             }
 
@@ -75,8 +91,22 @@ public class DisplayPDF extends AppCompatActivity {
         });
 
         switch(fileset) {
-            case ".vertplan": speditor.putBoolean(SharedPrefKeys.vplanFileUpdated + currentFile, false); break;
-            case ".mensa":    speditor.putBoolean(SharedPrefKeys.mensaFileUpdated + currentFile, false); break;
+            case ".vertplan":
+                if(sharedPref.getBoolean(SharedPrefKeys.vplanFileUpdated + currentFile, false)) {
+                    speditor.putBoolean(SharedPrefKeys.vplanFileUpdated + currentFile, false);
+                    int updatedFiles = sharedPref.getInt(SharedPrefKeys.vplanUpdatedFilesNr + currentFile, 0);
+                    if(updatedFiles > 0)
+                        speditor.putInt(SharedPrefKeys.vplanUpdatedFilesNr + currentFile, updatedFiles - 1);
+                }
+                break;
+            case ".mensa":
+                if(sharedPref.getBoolean(SharedPrefKeys.mensaFileUpdated + currentFile, false)) {
+                    speditor.putBoolean(SharedPrefKeys.mensaFileUpdated + currentFile, false);
+                    int updatedFiles = sharedPref.getInt(SharedPrefKeys.mensaUpdatedFilesNr + currentFile, 0);
+                    if(updatedFiles > 0)
+                        speditor.putInt(SharedPrefKeys.mensaUpdatedFilesNr + currentFile, updatedFiles - 1);
+                }
+                break;
             default: break;
         }
         speditor.commit();
