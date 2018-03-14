@@ -60,6 +60,7 @@
     <string name="settings.cache.clearcred">Zugangsdaten löschen</string>
     <string name="settings.cache.clearcred.descr">Lösche die lokal abgespeicherten Zugangsdaten</string>
     <string name="settings.cache.clearcred.snackbar">Zugangsdaten gelöscht</string>
+    <string name="general.clicktwicetoexit">Zum Schließen erneut die Zurück-Taste berühren</string>
 
 
     <!-- Sort strings below in a proper order in the groups on top of the file-->
