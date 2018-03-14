@@ -319,7 +319,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
             int clickInterval = 2000; // max time interval between both clicks in milliseconds
 
             this.doubleBackToExitPressedOnce = true;
-            String snackbarmssg = "Bla blub";
+            String snackbarmssg = getApplicationContext().getResources().getString(R.string.general_clicktwicetoexit);
             Snackbar.make(getWindow().getDecorView().getRootView(), snackbarmssg, clickInterval).show();
 
             // set doubleBackToExitPressedOnes to false when BACK was not pressed a second time during the clickInterval
