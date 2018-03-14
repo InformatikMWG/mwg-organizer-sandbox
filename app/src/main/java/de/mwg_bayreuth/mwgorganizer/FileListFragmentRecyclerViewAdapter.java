@@ -77,7 +77,7 @@ public class FileListFragmentRecyclerViewAdapter extends RecyclerView.Adapter<Fi
             mView = view;
             //mIdView = (TextView) view.findViewById(R.id.id);
             mContentView = (TextView) view.findViewById(R.id.content);
-            mUpToDateButton = (ImageView) view.findViewById(R.id.upToDate);
+            mUpToDateButton = (ImageView) view.findViewById(R.id.fileStatusIndicator);
         }
 
         @Override

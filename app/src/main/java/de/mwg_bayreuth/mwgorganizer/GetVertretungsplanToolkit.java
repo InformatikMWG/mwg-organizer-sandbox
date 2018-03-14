@@ -45,7 +45,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
         setUpReferences(sharedPref, speditor, dialog, filedir, root);
         this.cachemanager = cachemanager;
         updatedFilesNr = -1;
-        new FetchHtmlTask().execute();
+        new UpdateFilesTask().execute();
     }
 
 
@@ -58,9 +58,9 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
 
     /**
      * Download the HTML source of the Vertretungsplan page, search for downloadable files
-     * and trigger FetchPDF
+     * and set up the list buttons
      */
-    private class FetchHtmlTask  extends AsyncTask<Void, String, Integer> {
+    private class UpdateFilesTask  extends AsyncTask<Void, String, Integer> {
         String get_url  = "https://www.mwg-bayreuth.de/Login.html";
         String post_url = "https://www.mwg-bayreuth.de/Login.html";
 
@@ -331,8 +331,6 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
                                     }
                                 }
                             }
-
-                            fetchPDF(updatedFiles, this);
                         }
 
                         speditor.putInt(SharedPrefKeys.vplanUpdatedFilesNr, foundfilescount);
@@ -382,7 +380,7 @@ class GetVertretungsplanToolkit extends GetFileToolkits {
      * @param root - the root FetchHtmlTask
      */
     private void fetchPDF(ArrayList<PDFFile> filesToDownload,
-                          de.mwg_bayreuth.mwgorganizer.GetVertretungsplanToolkit.FetchHtmlTask root) {
+                          de.mwg_bayreuth.mwgorganizer.GetVertretungsplanToolkit.UpdateFilesTask root) {
         try {
             String get_url  = "https://www.mwg-bayreuth.de/Login.html";
             String post_url = "https://www.mwg-bayreuth.de/Login.html";

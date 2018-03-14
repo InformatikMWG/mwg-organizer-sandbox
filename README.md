@@ -10,6 +10,10 @@ MWG Organizer bundles and uses the following third party resources:
    Copyright 2017 Bartosz Schiller  
    Licensed under the Apache License, Version 2.0
 
+ - [MaterialProgressBar](https://github.com/DreaminginCodeZH/MaterialProgressBar)  
+   Copyright 2015 Zhang Hai  
+   Licensed under the Apache License, Version 2.0
+   
  - [Shortcut Badger](https://github.com/leolin310148/ShortcutBadger)  
    Copyright 2014 Leo Lin  
    Licensed under the Apache License, Version 2.0

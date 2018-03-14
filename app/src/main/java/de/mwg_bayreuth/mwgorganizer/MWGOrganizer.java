@@ -3,6 +3,7 @@ package de.mwg_bayreuth.mwgorganizer;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -32,7 +33,8 @@ implements NavigationView.OnNavigationItemSelectedListener,
 
     CacheManager cachemanager;
     File extDirectory;
-    ProgressDialog progDialog;
+    ProgressDialog updateFileListDialog;
+    ProgressDialog updateNewsDialog;
     SharedPreferences sharedPref;
     SharedPreferences.Editor speditor;
     MainFrags currentFrag;
@@ -54,16 +56,23 @@ implements NavigationView.OnNavigationItemSelectedListener,
         extDirectory = getExternalFilesDir(null);
         cachemanager = new CacheManager(speditor, extDirectory);
 
-        progDialog = new ProgressDialog(this);
-        progDialog.setCanceledOnTouchOutside(false);
-        boolean resistDialogs = true; // TODO: Load from SharedPrefs
+        updateFileListDialog = new ProgressDialog(this);
+        updateFileListDialog.setCanceledOnTouchOutside(false);
+        updateFileListDialog.setCancelable(false);
 
-        if(resistDialogs) { progDialog.setCancelable(false); }
-        progDialog.setTitle(getApplicationContext()
-                  .getResources().getString(R.string.general_update));
-        progDialog.setMessage(" ");
-        progDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        progDialog.setIndeterminate(false);
+        String cancelstr = getApplicationContext().getResources().getString(R.string.general_cancel);
+
+        /** TODO: Kill the update progress when pressing this button
+        updateFileListDialog.setButton(DialogInterface.BUTTON_NEGATIVE, cancelstr, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO: Cancle file list update progress
+            }
+        });*/
+
+        updateFileListDialog.setTitle(getApplicationContext()
+                .getResources().getString(R.string.general_refreshFileList));
+        updateFileListDialog.setMessage(" ");
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -198,7 +207,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
             // execute the required getFilesToolkit
             switch(currentFrag) {
                 case VplanFrag:
-                    new GetVertretungsplanToolkit(sharedPref, speditor, cachemanager, progDialog, extDirectory, this);
+                    new GetVertretungsplanToolkit(sharedPref, speditor, cachemanager, updateFileListDialog, extDirectory, this);
                     break;
 
                 case MplanFrag:

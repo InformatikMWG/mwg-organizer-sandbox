@@ -122,6 +122,8 @@
     <string name="settings.cache.clearcred.descr">Lösche die lokal abgespeicherten Zugangsdaten</string>
     <string name="settings.cache.clearcred.snackbar">Zugangsdaten gelöscht</string>
     <string name="general.clicktwicetoexit">Zum Schließen erneut die Zurück-Taste berühren</string>
+    <string name="general.refreshFileList">Suche nach Dateien …</string>
+    <string name="general.cancel">Abbrechen</string>
 
 
 </resources>
