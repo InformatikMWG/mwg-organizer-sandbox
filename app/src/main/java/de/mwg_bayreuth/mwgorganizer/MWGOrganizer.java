@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -37,6 +38,7 @@ implements NavigationView.OnNavigationItemSelectedListener,
     MainFrags currentFrag;
     FileSelectionFragment fileSelectionFragment;
     Menu drawerMenu;
+    boolean doubleBackToExitPressedOnce = false;
 
 
 
@@ -293,7 +295,13 @@ implements NavigationView.OnNavigationItemSelectedListener,
         else                { lastUpdateLabel.setText(nointconncaption); }
     }
 
-    
+
+
+    /**
+     * Custom onBackPressed-Method
+     *   1. When pressing back while the drawer is open, the drawer gets closed
+     *   2. If the drawer is closed, require two clicks on the back key for closing the app
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -301,8 +309,24 @@ implements NavigationView.OnNavigationItemSelectedListener,
         // Drawer opened -> Close drawer; Drawer closed -> Close application
         if (drawer.isDrawerOpen(GravityCompat.START)) { drawer.closeDrawer(GravityCompat.START); }
         else {
-            // TODO: App erst schließen, wenn Zurücktaste 2x schnell hintereinander gedrückt wurde
-            super.onBackPressed();
+            // Drawer closed -> Double click for closing the app
+            if (doubleBackToExitPressedOnce) {
+                // BACK pressed two times during the time interval -> close app
+                super.onBackPressed();
+                return;
+            }
+
+            int clickInterval = 2000; // max time interval between both clicks in milliseconds
+
+            this.doubleBackToExitPressedOnce = true;
+            String snackbarmssg = "Bla blub";
+            Snackbar.make(getWindow().getDecorView().getRootView(), snackbarmssg, clickInterval).show();
+
+            // set doubleBackToExitPressedOnes to false when BACK was not pressed a second time during the clickInterval
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() { doubleBackToExitPressedOnce=false; }
+            }, clickInterval);
         }
     }
 
